@@ -139,6 +139,8 @@ Brighten(double factor)
   // then clamping the result to a valid range.
 
   // ADD CODE HERE for Assignment 0
+  for (int i = 0; i < npixels; i++)
+    pixels[i] *= factor;
 
 }
 
