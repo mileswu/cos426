@@ -216,12 +216,12 @@ BlackAndWhite(void)
   // Replace each pixel with its luminance value
   // Put this in each channel,  so the result is grayscale
 
-  for (int i = 0; i < npixels; i++) {
-    double lumi = pixels[i].Luminance();
-	 pixels[i].SetRed(lumi);
-	 pixels[i].SetGreen(lumi);
-	 pixels[i].SetBlue(lumi);
-  }
+	for (int i = 0; i < npixels; i++) {
+		double lumi = pixels[i].Luminance();
+		pixels[i].SetRed(lumi);
+		pixels[i].SetGreen(lumi);
+		pixels[i].SetBlue(lumi);
+	}
 }
 
 void R2Image::
@@ -231,8 +231,23 @@ ExtractChannel(int channel)
   // Leaves the specified channel intact, 
   // and sets all the other ones to zero.
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "ExtractChannel(%d) not implemented\n", channel);
+	
+	for (int i = 0; i < npixels; i++) {
+		R2Pixel p(0.0, 0.0, 0.0, 1.0);
+		if(channel == R2_IMAGE_RED_CHANNEL) {
+			p.SetRed(pixels[i].Red());
+		} else if(channel == R2_IMAGE_GREEN_CHANNEL) {
+			p.SetGreen(pixels[i].Green());
+		} else if(channel == R2_IMAGE_BLUE_CHANNEL) {
+			p.SetBlue(pixels[i].Blue());
+		} else if(channel == R2_IMAGE_ALPHA_CHANNEL) {
+			p.SetAlpha(pixels[i].Alpha());
+		} else {
+			fprintf(stderr, "Invalid channel (%d)\n", channel);
+			return;
+		}
+		pixels[i] = p;
+	}
 }
 
 // Linear filtering ////////////////////////////////////////////////
