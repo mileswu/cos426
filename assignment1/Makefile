@@ -1,0 +1,23 @@
+#
+# Makefile for producing Assignment #0 output
+#
+
+EXE=src/imgpro
+
+IMGS=output/globos_brightness_0.5.jpg \
+     output/globos_brightness_1.0.jpg \
+     output/globos_brightness_1.5.jpg
+
+all: $(IMGS)
+
+output/globos_brightness_0.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -brightness 0.5
+
+output/globos_brightness_1.0.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -brightness 1.0
+
+output/globos_brightness_1.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -brightness 1.5
+
+clean:
+	rm -f $(IMGS)
