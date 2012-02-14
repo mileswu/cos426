@@ -55,11 +55,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>jpeg;glut</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>glut</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -72,6 +74,9 @@
     <ClCompile Include="R2Pixel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="imgpro.vcxproj">
+      <Project>{08e9f7ad-6cc9-4dd0-96f5-3625a50a0086}</Project>
+    </ProjectReference>
     <ProjectReference Include="jpeg\jpeg.vcxproj">
       <Project>{1c35e066-73ac-40ac-97a2-51c0db7c6577}</Project>
     </ProjectReference>

@@ -65,7 +65,7 @@ you just created.  Open writeup.html in a web browser to see the webpage.
 
 7. Create a .zip file containing the contents of this directory using the 
 naming convention that you can find on the Assignments page at
-http://www.cs.princeton.edu/courses/archive/spr11/cos426/assignments.html#submitting
+http://www.cs.princeton.edu/courses/archive/spr12/cos426/assignments.html#submitting
 
 8. Submit it at the Dropbox link on the course webpage.
 
