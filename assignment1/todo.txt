@@ -1,0 +1,35 @@
+--DONE--
+*(1/2) Black & White: Convert to gray levels by replacing each pixel with its luminance.
+*(1/2) Gamma: Apply a gamma correction to the image.
+(1/3) Saturation: Change the saturation of an image. See Graphica Obscura.
+
+--NOT DONE--
+
+Per-pixel Operations
+(1/3) Contrast: Change the contrast of an image. See Graphica Obscura.
+(1/3) Extract Channel: Leave specified channel intact and set all others to zero.
+Linear Filtering Operations
+Note: Since all the filters below are intended to operate on linear pixel values, be sure to undo the image gamma (by raising values to the power of 2.2) before processing, and re-apply gamma (by raising values to the power of 1/2.2) afterwards. Use good coding practices (modularity) and don't re-implement gamma correction, given that you already implemented it, as specified above.
+*(1) Gaussian Blur: Blur an image by convolving it with a Gaussian low-pass filter.
+(1/3) Sharpen: Apply a linear sharpening filter to the image.
+(1/3) Edge detect: Detect edges in an image by convolving it with an edge detection kernel.
+(1/3) Motion Blur: Apply a left-right motion blur to the image.
+Non-Linear Filtering Operations
+(1) Median Filter: Remove speckle noise using a median filter of given width
+*(2) Bilateral Filter: Smooth while preserving sharp edges in the original. See here.
+Resampling Operations
+Note: You must provide code for point, linear, and Gaussian sampling 
+Clarification: You must implement three sampling methods (point, bilinear, and Gaussian), which can be controlled by the -sampling option prior to -scale, -rotate, or -fun. For Gaussian sampling, choose sensible Gaussian filter dimensionss. For scaling, this requires adapting the extent of the Gaussian, for rotation and fun, you may use a fixed size of your choosing.
+*(2) Scale: Scale an image up or down by a real valued factor.
+(2) Rotate: Rotate an image by a given angle.
+*(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
+Dithering Operations
+(1/3) Quantize: Change the number of bits per channel of an image, using simple rounding.
+(2/3) Random dither: Convert an image to a given number of bits per channel, using a random threshold.
+(2) Ordered dither: Convert an image to a given number of bits per channel, using a 4x4 ordered dithering matrix.
+*(2) Floyd-Steinberg dither: Convert an image to a given number of bits per channel, using dithering with error diffusion.
+Miscellaneous
+*(1) Composite: Compose one image with a second image using the over operator, with a third image as a matte (alpha).
+*(3) Morph: Use pairs of corresponding lines to morph a source image into a target image using a morph parameter t. See [Beier92]. Use the provided line correspondence editor to define the line correspondences.
+(up to 3) Nonphotorealism: Implement any non-trivial painterly filter. For inspiration, take a look at the effects available in programs like xv, PhotoShop, and Image Composer, or GIMP (e.g., impressionist, charcoal, stained glass, etc.). The points awarded for this feature will depend on the creativity and difficulty of the filter. At most one such filter will receive points.
+(up to 3) Anything else: Implement any non-trivial image processing algorithm of your own choosing, and we will give you points according to the difficulty.

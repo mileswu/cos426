@@ -176,8 +176,12 @@ ChangeSaturation(double factor)
   // decreases saturation, extrapolation increases it, negative factors
   // preserve luminance  but invert the hue of the input image.
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "ChangeSaturation(%g) not implemented\n", factor);
+  for (int i = 0; i < npixels; i++) {
+		double lumi = pixels[i].Luminance();
+		R2Pixel bwpixel(lumi, lumi, lumi, 1.0);
+		pixels[i] = (1-factor)*bwpixel + factor*pixels[i];
+		pixels[i].Clamp();
+  }
 }
 
 void R2Image::
