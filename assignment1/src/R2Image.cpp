@@ -8,6 +8,7 @@
 #include "R2Pixel.h"
 #include "R2Image.h"
 #include <iostream>
+#include <vector>
 
 
 
@@ -257,9 +258,36 @@ void R2Image::
 Blur(double sigma)
 {
   // Blur an image with a Gaussian filter with a given sigma.
+	ApplyGamma(2.2);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Blur(%g) not implemented\n", sigma);
+	int size = 3*sigma;
+	std::vector<double> col(size+1, 0.0);
+	std::vector<std::vector<double> > gaussiankernel(size+1, col);
+	for(int i=0; i<=size; i++) {
+		for(int j=0; j<=size; j++) {
+			double distancesquared = i*i + j*j;
+			gaussiankernel[i][j] = exp(-distancesquared / 2.0 / sigma / sigma);
+		}
+	}
+
+	for (int i = 0; i < npixels; i++) {
+		R2Pixel p(0.0, 0.0, 0.0, pixels[i].Alpha());
+		int x0 = i/height;
+		int y0 = i%height;
+		double total=0;
+
+		for(int x = (x0 - size < 0 ? 0 : x0 - size); x < (x0 + size >= width ? width : x0 + size); x++) {
+			for(int y = (y0 - size < 0 ? 0 : y0 - size); y < (y0 + size >= height ? height : y0 + size); y++) {
+				double g = gaussiankernel[abs(x-x0)][abs(y-y0)];
+				p += g*Pixel(x,y);
+				total += g;
+			}
+		}
+		p /= total;
+		pixels[i] = p;
+	}
+
+	ApplyGamma(1.0/2.2);
 }
 
 

@@ -7,7 +7,8 @@ EXE=src/imgpro
 IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamma0.5.jpg \
 		 output/globos_saturation2.5.jpg output/globos_saturation0.5.jpg \
 		 output/globos_contrast0.5.jpg output/globos_contrast1.5.jpg \
-		 output/globos_extractred.jpg
+		 output/globos_extractred.jpg \
+		 output/globos_gaussian.jpg
 
 all: $(IMGS)
 
@@ -31,6 +32,9 @@ output/globos_contrast1.5.jpg: input/globos_de_colores.jpg
 
 output/globos_extractred.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -extract 0
+
+output/globos_gaussian.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -blur 3
 
 clean:
 	rm -f $(IMGS)
