@@ -141,7 +141,7 @@ Brighten(double factor)
   // ADD CODE HERE for Assignment 0
   for (int i = 0; i < npixels; i++) {
     pixels[i] *= factor;
-    pixels[i].Clamp(255);
+    pixels[i].Clamp();
   }
 
 }
