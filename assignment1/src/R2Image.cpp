@@ -164,8 +164,17 @@ ChangeContrast(double factor)
   // Interpolation reduces constrast, extrapolation boosts constrast,
   // and negative factors generate inverted images.
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "ChangeContrast(%g) not implemented\n", factor);
+	double avglumi=0;
+  for (int i = 0; i < npixels; i++) {
+		avglumi += pixels[i].Luminance();
+	}
+	avglumi /= npixels;
+	R2Pixel greypixel(avglumi, avglumi, avglumi, 1.0);
+  
+	for (int i = 0; i < npixels; i++) {
+		pixels[i] = (1-factor)*greypixel + factor*pixels[i];
+		pixels[i].Clamp();
+  }
 }
 
 void R2Image::

@@ -2,11 +2,11 @@
 *(1/2) Black & White: Convert to gray levels by replacing each pixel with its luminance.
 *(1/2) Gamma: Apply a gamma correction to the image.
 (1/3) Saturation: Change the saturation of an image. See Graphica Obscura.
+(1/3) Contrast: Change the contrast of an image. See Graphica Obscura.
 
 --NOT DONE--
 
 Per-pixel Operations
-(1/3) Contrast: Change the contrast of an image. See Graphica Obscura.
 (1/3) Extract Channel: Leave specified channel intact and set all others to zero.
 Linear Filtering Operations
 Note: Since all the filters below are intended to operate on linear pixel values, be sure to undo the image gamma (by raising values to the power of 2.2) before processing, and re-apply gamma (by raising values to the power of 1/2.2) afterwards. Use good coding practices (modularity) and don't re-implement gamma correction, given that you already implemented it, as specified above.
