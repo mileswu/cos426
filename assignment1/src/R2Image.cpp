@@ -7,6 +7,7 @@
 #include "R2/R2.h"
 #include "R2Pixel.h"
 #include "R2Image.h"
+#include <iostream>
 
 
 
@@ -139,7 +140,10 @@ Brighten(double factor)
   // then clamping the result to a valid range.
 
   // MAY ADD CODE HERE FROM ASSIGNMENT 0. NO CREDIT FOR THIS FEATURE
-
+  for (int i = 0; i < npixels; i++) {
+    pixels[i] *= factor;
+    pixels[i].Clamp();
+  }
 }
 
 void R2Image::
@@ -191,8 +195,12 @@ BlackAndWhite(void)
   // Replace each pixel with its luminance value
   // Put this in each channel,  so the result is grayscale
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "BlackAndWhite() not implemented\n");
+  for (int i = 0; i < npixels; i++) {
+    double lumi = pixels[i].Luminance();
+	 pixels[i].SetRed(lumi);
+	 pixels[i].SetGreen(lumi);
+	 pixels[i].SetBlue(lumi);
+  }
 }
 
 void R2Image::
