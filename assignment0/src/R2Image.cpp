@@ -139,6 +139,13 @@ Brighten(double factor)
   // then clamping the result to a valid range.
 
   // ADD CODE HERE for Assignment 0
+	
+	// Check that factor is valid
+  if(factor < 0) {
+    fprintf(stderr, "Brightness factor (%f) is negative\n", factor);
+		return;
+	}
+
   for (int i = 0; i < npixels; i++) {
     pixels[i] *= factor;
     pixels[i].Clamp();

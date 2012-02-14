@@ -69,6 +69,7 @@ Miles Wu, mawu           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 
 <p>
+First the brightness factor is checked to be positive.
 For each pixel in the image, we multiply the red, green and blue values by the brightness factor.
 The alpha channel is left untouched.
 Finally as the last step, we clamp (by taking all negative values to zero, and all values greater than 1 to one) so that the range of values is within the standard zero to one range.
