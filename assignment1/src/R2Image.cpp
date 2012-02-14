@@ -295,9 +295,14 @@ void R2Image::
 Sharpen()
 {
   // Sharpen an image using a linear filter
+	R2Image blurredImage(*this);
+	blurredImage.Blur(2.0);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Sharpen() not implemented\n");
+	double factor=2.0;
+	for (int i = 0; i < npixels; i++) {
+		pixels[i] = (1-factor)*blurredImage.Pixels()[i] + factor*pixels[i];
+		pixels[i].Clamp();
+  }
 }
 
 
