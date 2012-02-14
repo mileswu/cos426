@@ -185,8 +185,16 @@ ApplyGamma(double exponent)
 {
   // Apply a gamma correction with exponent to each pixel
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Gamma(%g) not implemented\n", exponent);
+  if(exponent < 0) {
+		fprintf(stderr, "Gamma exponent (%f) negative\n", exponent);
+		return;
+	}
+  
+  for (int i = 0; i < npixels; i++) {
+		pixels[i].SetRed(pow(pixels[i].Red(), exponent));
+		pixels[i].SetGreen(pow(pixels[i].Green(), exponent));
+		pixels[i].SetBlue(pow(pixels[i].Blue(), exponent));
+  }
 }
 
 void R2Image::

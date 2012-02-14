@@ -4,20 +4,17 @@
 
 EXE=src/imgpro
 
-IMGS=output/globos_brightness_0.5.jpg \
-     output/globos_brightness_1.0.jpg \
-     output/globos_brightness_1.5.jpg
+IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamma0.5.jpg
 
 all: $(IMGS)
 
-output/globos_brightness_0.5.jpg: input/globos_de_colores.jpg
-	$(EXE) $^ $@ -brightness 0.5
+output/globos_blackandwhite.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -blackandwhite
 
-output/globos_brightness_1.0.jpg: input/globos_de_colores.jpg
-	$(EXE) $^ $@ -brightness 1.0
-
-output/globos_brightness_1.5.jpg: input/globos_de_colores.jpg
-	$(EXE) $^ $@ -brightness 1.5
+output/globos_gamma2.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -gamma 2
+output/globos_gamma0.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -gamma 0.5
 
 clean:
 	rm -f $(IMGS)
