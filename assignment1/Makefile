@@ -8,7 +8,8 @@ IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamm
 		 output/globos_saturation2.5.jpg output/globos_saturation0.5.jpg \
 		 output/globos_contrast0.5.jpg output/globos_contrast1.5.jpg \
 		 output/globos_extractred.jpg \
-		 output/globos_gaussian.jpg output/globos_sharpen.jpg output/globos_edge.jpg
+		 output/globos_gaussian.jpg output/globos_sharpen.jpg \
+		 output/globos_edge.jpg output/globos_motionblur.jpg
 
 all: $(IMGS)
 
@@ -39,6 +40,8 @@ output/globos_sharpen.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -sharpen
 output/globos_edge.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -edge
+output/globos_motionblur.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -motionblur 5
 
 clean:
 	rm -f $(IMGS)

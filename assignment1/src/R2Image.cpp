@@ -358,8 +358,27 @@ MotionBlur(int amount)
   // convolve in X direction with a linear ramp of amount non-zero pixels
   // the image should be strongest on the right hand side (see example)
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "MotionBlur not implemented.\n");
+	ApplyGamma(2.2);
+	R2Image orig(*this);
+	
+	for (int i = 0; i < npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+
+		R2Pixel p(0.0,0.0,0.0, orig.Pixel(x0,y0).Alpha());
+		int counter = 0;
+		double total = 0;
+		for(int x = x0 - amount; x <= x0; x++) {
+			if(x < 0) continue;
+			counter++;
+			p += orig.Pixel(x,y0) * counter;
+			total += counter;
+		}
+		p /= total;
+		pixels[i] = p;
+	}
+
+	ApplyGamma(1.0/2.2);
 }
 
 
