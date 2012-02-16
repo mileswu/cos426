@@ -6,13 +6,13 @@
 (1/3) Extract Channel: Leave specified channel intact and set all others to zero.
 *(1) Gaussian Blur: Blur an image by convolving it with a Gaussian low-pass filter.
 (1/3) Sharpen: Apply a linear sharpening filter to the image.
+(1/3) Edge detect: Detect edges in an image by convolving it with an edge detection kernel.
 
 --NOT DONE--
 
 Reverse line on Contrast/Saturation to preserve alpha
 Comment Gaussian
 
-(1/3) Edge detect: Detect edges in an image by convolving it with an edge detection kernel.
 (1/3) Motion Blur: Apply a left-right motion blur to the image.
 Non-Linear Filtering Operations
 (1) Median Filter: Remove speckle noise using a median filter of given width

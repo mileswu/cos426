@@ -259,6 +259,7 @@ Blur(double sigma)
 {
   // Blur an image with a Gaussian filter with a given sigma.
 	ApplyGamma(2.2);
+	R2Image original(*this);
 
 	int size = 3*sigma;
 	std::vector<double> col(size+1, 0.0);
@@ -279,7 +280,7 @@ Blur(double sigma)
 		for(int x = (x0 - size < 0 ? 0 : x0 - size); x < (x0 + size >= width ? width : x0 + size); x++) {
 			for(int y = (y0 - size < 0 ? 0 : y0 - size); y < (y0 + size >= height ? height : y0 + size); y++) {
 				double g = gaussiankernel[abs(x-x0)][abs(y-y0)];
-				p += g*Pixel(x,y);
+				p += g*original.Pixel(x,y);
 				total += g;
 			}
 		}
@@ -310,9 +311,41 @@ void R2Image::
 EdgeDetect(void)
 {
   // Detect edges in an image.
+	ApplyGamma(2.2);
+	R2Image orig(*this);
+	
+	for (int i = 0; i < npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		double gx=0;
+		double gy=0;
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "EdgeDetect() not implemented\n");
+		for(int x = x0 - 1; x <= x0 + 1; x++) {
+			if(x < 0) continue;
+			if(x >= width) continue;
+			for(int y = y0 - 1; y <= y0 + 1; y++) {
+				if(y < 0) continue;
+				if(y >= height) continue;
+
+				if(x != x0) { //gx
+					double sign = (x < x0) ? -1 : 1;
+					double magnitude = (y == y0) ? 2 : 1;
+					gx += orig.Pixel(x,y).Luminance() * sign * magnitude;
+				}
+				if(y != y0) { //gx
+					double sign = (y < y0) ? 1 : -1;
+					double magnitude = (x == x0) ? 2 : 1;
+					gy += orig.Pixel(x,y).Luminance() * sign * magnitude;
+				}
+			}
+		}
+		double lumi = sqrt(gx*gx + gy*gy)/4.0;
+		pixels[i].SetBlue(lumi);
+		pixels[i].SetRed(lumi);
+		pixels[i].SetGreen(lumi);
+	}
+
+	ApplyGamma(1.0/2.2);
 }
 
 
