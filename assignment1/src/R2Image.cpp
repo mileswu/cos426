@@ -277,8 +277,8 @@ Blur(double sigma)
 		int y0 = i%height;
 		double total=0;
 
-		for(int x = (x0 - size < 0 ? 0 : x0 - size); x < (x0 + size >= width ? width : x0 + size); x++) {
-			for(int y = (y0 - size < 0 ? 0 : y0 - size); y < (y0 + size >= height ? height : y0 + size); y++) {
+		for(int x = (x0 - size < 0 ? 0 : x0 - size); x < (x0 + size + 1 > width ? width : x0 + size + 1); x++) {
+			for(int y = (y0 - size < 0 ? 0 : y0 - size); y < (y0 + size + 1 > height ? height : y0 + size + 1); y++) {
 				double g = gaussiankernel[abs(x-x0)][abs(y-y0)];
 				p += g*original.Pixel(x,y);
 				total += g;
@@ -430,9 +430,39 @@ void R2Image::
 BilateralFilter(double rangesigma, double domainsigma)
 {
   // Perform bilateral filtering with a given range and domain widths.
+	R2Image orig(*this);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "BilateralFilter(%g, %g) not implemented\n", rangesigma, domainsigma);
+	int size = 3*domainsigma;
+	std::vector<double> col(size+1, 0.0);
+	std::vector<std::vector<double> > gaussiankernel(size+1, col);
+	for(int i=0; i<=size; i++) {
+		for(int j=0; j<=size; j++) {
+			double distancesquared = i*i + j*j;
+			gaussiankernel[i][j] = exp(-distancesquared / 2.0 / domainsigma / domainsigma);
+		}
+	}
+
+	for (int i = 0; i < npixels; i++) {
+		R2Pixel p(0.0, 0.0, 0.0, pixels[i].Alpha());
+		int x0 = i/height;
+		int y0 = i%height;
+		double total=0;
+
+		for(int x = (x0 - size < 0 ? 0 : x0 - size); x < (x0 + size +1 > width ? width : x0 + size + 1); x++) {
+			for(int y = (y0 - size < 0 ? 0 : y0 - size); y < (y0 + size + 1 > height ? height : y0 + size + 1); y++) {
+				double closeness = gaussiankernel[abs(x-x0)][abs(y-y0)];
+
+				R2Pixel pixeldiff = orig.Pixel(x,y) - pixels[i];
+				double pixeldiffsquared = pow(pixeldiff.Blue(), 2) + pow(pixeldiff.Red(), 2) + pow(pixeldiff.Green(), 2);
+				double similarity = exp(-pixeldiffsquared / 2.0 / rangesigma / rangesigma);
+
+				p += closeness*similarity*orig.Pixel(x,y);
+				total += closeness*similarity;
+			}
+		}
+		p /= total;
+		pixels[i] = p;
+	}
 }
 
 

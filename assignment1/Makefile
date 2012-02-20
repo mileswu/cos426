@@ -10,7 +10,8 @@ IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamm
 		 output/globos_extractred.jpg \
 		 output/globos_gaussian.jpg output/globos_sharpen.jpg \
 		 output/globos_edge.jpg output/globos_motionblur.jpg \
-		 output/globos_median_5.jpg output/globos_median_1 
+		 output/globos_median_5.jpg output/globos_median_1 \
+		 output/globos_bilateral_6_0.15.jpg
 
 
 all: $(IMGS)
@@ -49,6 +50,9 @@ output/globos_median_1.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -median 1
 output/globos_median_5.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -median 5
+
+output/globos_bilateral_6_0.15.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -bilateral 6 0.15
 
 clean:
 	rm -f $(IMGS)
