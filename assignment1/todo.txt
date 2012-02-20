@@ -8,15 +8,16 @@
 (1/3) Sharpen: Apply a linear sharpening filter to the image.
 (1/3) Edge detect: Detect edges in an image by convolving it with an edge detection kernel.
 (1/3) Motion Blur: Apply a left-right motion blur to the image.
+(1) Median Filter: Remove speckle noise using a median filter of given width
 
 --NOT DONE--
 
 Reverse line on Contrast/Saturation to preserve alpha
 Comment Gaussian
 Motion blur: Check left edge?
+Median: It's square atm. that ok?
+Check Makefile to produce more than 1 version of filter
 
-Non-Linear Filtering Operations
-(1) Median Filter: Remove speckle noise using a median filter of given width
 *(2) Bilateral Filter: Smooth while preserving sharp edges in the original. See here.
 Resampling Operations
 Note: You must provide code for point, linear, and Gaussian sampling 

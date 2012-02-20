@@ -388,9 +388,42 @@ void R2Image::
 MedianFilter(double sigma)
 {
   // Perform median filtering with a given width
+	R2Image orig(*this);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "MedianFilter(%g) not implemented\n", sigma);
+	for (int i = 0; i < npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+
+		std::vector<double> rs, gs, bs;
+		for(int x = x0 - sigma; x <= x0 + sigma; x++) {
+			if(x < 0) continue;
+			if(x >= width) continue;
+			for(int y = y0 - sigma; y <= y0 + sigma; y++) {
+				if(y < 0) continue;
+				if(y >= height) continue;
+
+				rs.push_back(orig.Pixel(x,y).Red());
+				bs.push_back(orig.Pixel(x,y).Blue());
+				gs.push_back(orig.Pixel(x,y).Green());
+			}
+		}
+		sort(rs.begin(), rs.end());
+		sort(bs.begin(), bs.end());
+		sort(gs.begin(), gs.end());
+
+		double r, g, b;
+		if(rs.size() % 2 == 0) {
+			r = 0.5*(rs[rs.size()/2 - 1] + rs[rs.size()/2]);
+			g = 0.5*(gs[rs.size()/2 - 1] + gs[rs.size()/2]);
+			b = 0.5*(bs[rs.size()/2 - 1] + bs[rs.size()/2]);
+		} else {
+			r = rs[rs.size()/2];
+			g = gs[rs.size()/2];
+			b = bs[rs.size()/2];
+		}
+
+		pixels[i] = R2Pixel(r, g, b, 1.0);
+	}
 }
 
 void R2Image::
