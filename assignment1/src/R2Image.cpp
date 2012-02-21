@@ -550,9 +550,60 @@ void R2Image::
 Rotate(double angle, int sampling_method)
 {
   // Rotate an image by the given angle.
+	
+	// Check range of angle 0-360
+	
+	// Expand canvas
+	R2Image orig(*this);
+	if(angle < M_PI/2) {
+		width = ((double)orig.width)*cos(angle) + ((double)orig.height)*sin(angle);
+		height = ((double)orig.width)*sin(angle) + ((double)orig.height)*cos(angle);
+	} else if(angle < M_PI) {
+		width = -(((double)orig.width)*cos(angle) - ((double)orig.height)*sin(angle));
+		height = ((double)orig.width)*sin(angle) - ((double)orig.height)*cos(angle);
+	} else if(angle < 3.0*M_PI/2.0) {
+		width = -(((double)orig.width)*cos(angle) + ((double)orig.height)*sin(angle));
+		height = -(((double)orig.width)*sin(angle) + ((double)orig.height)*cos(angle));
+	} else {
+		width = ((double)orig.width)*cos(angle) - ((double)orig.height)*sin(angle);
+		height = -(((double)orig.width)*sin(angle) - ((double)orig.height)*cos(angle));
+	}
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Rotate(%g, %d) not implemented\n", angle, sampling_method);
+	delete [] pixels;
+	npixels = width*height;
+	pixels = new R2Pixel[npixels];
+
+	// Copy image across onto expanded canvas so we have black edge to sample against for smooth line
+	R2Image orig2(width, height);
+	for(int x=0; x<orig2.width; x++) {
+		for(int y=0; y<orig2.height; y++) {
+			int x0 = x - orig2.width/2 + orig.width/2;
+			int y0 = y - orig2.height/2 + orig.height/2;
+			if(x0 >= orig.width || y0 >= orig.height || x0 < 0 || y0 < 0)
+				continue;
+			orig2.SetPixel(x,y, orig.Pixel(x0,y0));
+		}
+	}
+
+	// Middle of image to perform rotation around
+	double yoffset = ((double)height)/2;
+	double xoffset = ((double)width)/2;
+	
+	for(int i=0; i<npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		
+		double x_orig = (x0-xoffset)*cos(-angle) - (y0-yoffset)*sin(-angle) + xoffset;
+		double y_orig = (x0-xoffset)*sin(-angle) + (y0-yoffset)*cos(-angle) + yoffset;
+
+		if(x_orig < 0 || x_orig >= width || y_orig < 0 || y_orig >= height) {
+			pixels[i] = R2Pixel(0,0,0,1);
+		}
+		else {
+			double sigma_x = 0.5, sigma_y = 0.5;
+			pixels[i] = orig2.Sample(x_orig, y_orig, sampling_method, sigma_x, sigma_y);
+		}
+	}
 }
 
 
