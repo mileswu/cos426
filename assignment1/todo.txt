@@ -9,6 +9,8 @@
 (1/3) Edge detect: Detect edges in an image by convolving it with an edge detection kernel.
 (1/3) Motion Blur: Apply a left-right motion blur to the image.
 (1) Median Filter: Remove speckle noise using a median filter of given width
+*(2) Bilateral Filter: Smooth while preserving sharp edges in the original. See here.
+*(2) Scale: Scale an image up or down by a real valued factor.
 
 --NOT DONE--
 
@@ -17,12 +19,10 @@ Comment Gaussian
 Motion blur: Check left edge?
 Median: It's square atm. that ok?
 Check Makefile to produce more than 1 version of filter
+Bilateral: Weird purple ringing? (maybe this was jpeg artifacts)
+Scaling : choose better sigma
 
-*(2) Bilateral Filter: Smooth while preserving sharp edges in the original. See here.
-Resampling Operations
-Note: You must provide code for point, linear, and Gaussian sampling 
-Clarification: You must implement three sampling methods (point, bilinear, and Gaussian), which can be controlled by the -sampling option prior to -scale, -rotate, or -fun. For Gaussian sampling, choose sensible Gaussian filter dimensionss. For scaling, this requires adapting the extent of the Gaussian, for rotation and fun, you may use a fixed size of your choosing.
-*(2) Scale: Scale an image up or down by a real valued factor.
+
 (2) Rotate: Rotate an image by a given angle.
 *(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
 Dithering Operations

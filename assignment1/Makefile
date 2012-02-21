@@ -10,8 +10,11 @@ IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamm
 		 output/globos_extractred.jpg \
 		 output/globos_gaussian.jpg output/globos_sharpen.jpg \
 		 output/globos_edge.jpg output/globos_motionblur.jpg \
-		 output/globos_median_5.jpg output/globos_median_1 \
-		 output/globos_bilateral_6_0.15.jpg
+		 output/globos_median_5.jpg output/globos_median_1.jpg \
+		 output/globos_bilateral_6_0.15.jpg \
+		 output/globos_scale_gaussian0.7.jpg output/globos_scale_nearest0.7.jpg output/globos_scale_bilinear0.7.jpg \
+		 output/globos_scale_gaussian1.5.jpg output/globos_scale_nearest1.5.jpg output/globos_scale_bilinear1.5.jpg
+		 
 
 
 all: $(IMGS)
@@ -53,6 +56,19 @@ output/globos_median_5.jpg: input/globos_de_colores.jpg
 
 output/globos_bilateral_6_0.15.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -bilateral 6 0.15
+
+output/globos_scale_gaussian0.7.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 2 -scale 0.7 0.7
+output/globos_scale_bilinear0.7.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 1 -scale 0.7 0.7
+output/globos_scale_nearest0.7.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 0 -scale 0.7 0.7
+output/globos_scale_gaussian1.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 2 -scale 1.5 1.5
+output/globos_scale_bilinear1.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 1 -scale 1.5 1.5
+output/globos_scale_nearest1.5.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sampling 0 -scale 1.5 1.5
 
 clean:
 	rm -f $(IMGS)

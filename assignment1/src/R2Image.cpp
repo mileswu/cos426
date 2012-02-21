@@ -467,15 +467,82 @@ BilateralFilter(double rangesigma, double domainsigma)
 
 
 // Resampling operations  ////////////////////////////////////////////////
+R2Pixel R2Image::Sample(double x0, double y0, int sampling_method, double sigma_x, double sigma_y)
+{
+	if(sampling_method == R2_IMAGE_POINT_SAMPLING) {
+		int x_orig = lround(x0);
+		int y_orig = lround(y0);
+		// Just in case for range violations
+		if(x_orig < 0) x_orig = 0;
+		if(x_orig >= width) x_orig = width - 1;
+		if(y_orig < 0) y_orig = 0;
+		if(y_orig >= height) y_orig = height - 1;
+		return Pixel(x_orig, y_orig);
+	}
+	else if(sampling_method == R2_IMAGE_GAUSSIAN_SAMPLING) {
+		int x_orig = lround(x0);
+		int y_orig = lround(y0);
 
+		R2Pixel p(0.0, 0.0, 0.0, 1.0);
+		double total=0;
+		int size_x = sigma_x * 3;
+		int size_y = sigma_y * 3;
+
+		for(int x = (x_orig - size_x < 0 ? 0 : x_orig - size_x); x < (x_orig + size_x + 1 > width ? width : x_orig + size_x + 1); x++) {
+			for(int y = (y_orig - size_y < 0 ? 0 : y_orig - size_y); y < (y_orig + size_y + 1 > height ? height : y_orig + size_y + 1); y++) {
+				double g = exp(-(x-x0)*(x-x0) / 2.0 / sigma_x / sigma_x) * exp(-(y-y0)*(y-y0) / 2.0 / sigma_y / sigma_y);
+				p += g*Pixel(x,y);
+				total += g;
+			}
+		}
+		p /= total;
+		return p;
+	}
+	else if(sampling_method == R2_IMAGE_BILINEAR_SAMPLING) {
+		int xlow = floor(x0) > 0 ? floor(x0) : 0;
+		int xhigh = ceil(x0) < width ? ceil(x0) : width - 1;
+		int ylow = floor(y0) > 0 ? floor(y0) : 0;
+		int yhigh = ceil(y0) < height ? ceil(y0) : height - 1;
+
+		R2Pixel a = (1.0 - (x0-xlow))*Pixel(xlow, yhigh) + (x0-xlow)*Pixel(xhigh, yhigh);
+		R2Pixel b = (1.0 - (x0-xlow))*Pixel(xlow, ylow) + (x0-xlow)*Pixel(xhigh, ylow);
+		R2Pixel dst = (1.0 - (y0-ylow))*b + (y0-ylow)*a;
+		return dst;
+	}
+	else {
+		fprintf(stderr, "Invalid sampling method (%d)\n", sampling_method);
+		return R2Pixel();
+	}
+}
 
 void R2Image::
 Scale(double sx, double sy, int sampling_method)
 {
   // Scale an image in x by sx, and y by sy.
+	R2Image orig(*this);
+	width = lround(sx*orig.width);
+	height = lround(sy*orig.height);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Scale(%g, %g, %d) not implemented\n", sx, sy, sampling_method);
+	delete [] pixels;
+	npixels = width*height;
+	pixels = new R2Pixel[npixels];
+
+	double xoffset = 0.5 * ((double)orig.width) / ((double)width) - 0.5;
+	double yoffset = 0.5 * ((double)orig.height) / ((double)height) - 0.5;
+	
+	for(int i=0; i<npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+
+		double x_orig = ((double)orig.width) / ((double)width) * x0 + xoffset; 
+		double y_orig = ((double)orig.height) / ((double)height) * y0 + yoffset; 
+
+		// These really suck right now
+		double sigma_x = 1.0/3.0/sx, sigma_y = 1.0/3.0/sy;
+		if(sx > 1.0) { sigma_x = 0.5; }
+		if(sy > 1.0) { sigma_y = 0.5; }
+		pixels[i] = orig.Sample(x_orig, y_orig, sampling_method, sigma_x, sigma_y);
+	}
 }
 
 
@@ -1278,7 +1345,7 @@ WriteJPEG(const char *filename) const
   cinfo.dct_method = JDCT_ISLOW;
   jpeg_set_defaults(&cinfo);
   cinfo.optimize_coding = TRUE;
-  jpeg_set_quality(&cinfo, 75, TRUE);
+  jpeg_set_quality(&cinfo, 100, TRUE);
   jpeg_start_compress(&cinfo, TRUE);
 	
   // Allocate unsigned char buffer for reading image
