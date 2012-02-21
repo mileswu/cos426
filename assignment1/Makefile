@@ -13,8 +13,9 @@ IMGS=output/globos_blackandwhite.jpg output/globos_gamma2.jpg output/globos_gamm
 		 output/globos_median_5.jpg output/globos_median_1.jpg \
 		 output/globos_bilateral_6_0.15.jpg \
 		 output/globos_scale_gaussian0.7.jpg output/globos_scale_nearest0.7.jpg output/globos_scale_bilinear0.7.jpg \
-		 output/globos_scale_gaussian1.5.jpg output/globos_scale_nearest1.5.jpg output/globos_scale_bilinear1.5.jpg
-		 
+		 output/globos_scale_gaussian1.5.jpg output/globos_scale_nearest1.5.jpg output/globos_scale_bilinear1.5.jpg \
+		 output/globos_rotate_nearest_5.3.jpg output/globos_rotate_bilinear_5.3.jpg output/globos_rotate_gaussian_5.3.jpg \
+		 output/globos_quantize_4.jpg
 
 
 all: $(IMGS)
@@ -69,6 +70,17 @@ output/globos_scale_bilinear1.5.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -sampling 1 -scale 1.5 1.5
 output/globos_scale_nearest1.5.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -sampling 0 -scale 1.5 1.5
+
+
+output/globos_rotate_nearest_5.3.jpg: input/globos_de_colores.jpg
+	$(exe) $^ $@ -sampling 0 -rotate 5.3
+output/globos_rotate_bilinear_5.3.jpg: input/globos_de_colores.jpg
+	$(exe) $^ $@ -sampling 1 -rotate 5.3
+output/globos_rotate_gaussian_5.3.jpg: input/globos_de_colores.jpg
+	$(exe) $^ $@ -sampling 2 -rotate 5.3
+	
+output/globos_qunatize_4.jpg: input/globos_de_colores.jpg
+	$(exe) $^ $@ -quantize 4
 
 clean:
 	rm -f $(IMGS)

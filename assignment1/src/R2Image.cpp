@@ -624,8 +624,15 @@ Quantize (int nbits)
 {
   // Quantizes an image with "nbits" bits per channel.
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Quantize(%d) not implemented\n", nbits);
+	for(int i=0; i<npixels; i++) {
+		double r, g, b, a;
+		pixels[i].Clamp(1.0);
+		r = round(pixels[i].Red()*(pow(2.0, nbits)-1)) / (pow(2.0, nbits) - 1);
+		g = round(pixels[i].Green()*(pow(2.0, nbits)-1)) / (pow(2.0, nbits) - 1);
+		b = round(pixels[i].Blue()*(pow(2.0, nbits)-1)) / (pow(2.0, nbits) - 1);
+		a = round(pixels[i].Alpha()*(pow(2.0, nbits)-1)) / (pow(2.0, nbits) - 1);
+		pixels[i].Reset(r, g, b, a);
+	}
 }
 
 
