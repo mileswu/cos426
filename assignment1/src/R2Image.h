@@ -78,6 +78,7 @@ class R2Image {
   void BilateralFilter(double sigmadomain, double sigmarange);
 
   // Resampling operations
+	R2Pixel Sample(double x0, double y0, int sampling_method, double sigma_x, double sigma_y);
   void Scale(double sx, double sy, int sampling_method);
   void Rotate(double angle, int sampling_method);
   void MotionBlur(int amount);
