@@ -623,7 +623,6 @@ void R2Image::
 Quantize (int nbits)
 {
   // Quantizes an image with "nbits" bits per channel.
-
 	for(int i=0; i<npixels; i++) {
 		double r, g, b, a;
 		pixels[i].Clamp(1.0);
@@ -641,21 +640,77 @@ void R2Image::
 RandomDither(int nbits)
 {
   // Converts and image to nbits per channel using random dither.
+	for(int i=0; i<npixels; i++) {
+		double val;
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "RandomDither(%d) not implemented\n", nbits);
+		for(int j=0; j<4; j++) { //One for each channel
+			val = pixels[i][j]*(pow(2.0, nbits)-1);
+			double e = val - floor(val);
+			if(e >= ((double)rand())/ RAND_MAX)
+				val = ceil(val);
+			else
+				val = floor(val);
+			pixels[i][j] = val / (pow(2.0, nbits)-1);
+		}
+	}
 }
-
-
 
 void R2Image::
 OrderedDither(int nbits)
 {
   // Converts an image to nbits per channel using ordered dither, 
   // with a 4x4 Bayer's pattern matrix.
+	std::vector<double> col(4, 0.0);
+	std::vector<std::vector<double> > pattern(4, col);
+	/*pattern[0][0] = 15;
+	pattern[0][1] = 3;
+	pattern[0][2] = 12;
+	pattern[0][3] = 0;
+	pattern[1][0] = 7;
+	pattern[1][1] = 11;
+	pattern[1][2] = 4;
+	pattern[1][3] = 8;
+	pattern[2][0] = 13;
+	pattern[2][1] = 1;
+	pattern[2][2] = 14;
+	pattern[2][3] = 2;
+	pattern[3][0] = 5;
+	pattern[3][1] = 9;
+	pattern[3][2] = 6;
+	pattern[3][3] = 10;*/
+	pattern[0][0] = 1;
+	pattern[0][1] = 13;
+	pattern[0][2] = 4;
+	pattern[0][3] = 16;
+	pattern[1][0] = 9;
+	pattern[1][1] = 5;
+	pattern[1][2] = 12;
+	pattern[1][3] = 8;
+	pattern[2][0] = 3;
+	pattern[2][1] = 15;
+	pattern[2][2] = 2;
+	pattern[2][3] = 14;
+	pattern[3][0] = 11;
+	pattern[3][1] = 7;
+	pattern[3][2] = 10;
+	pattern[3][3] = 6;
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "OrderedDither(%d) not implemented\n", nbits);
+	for(int i=0; i<npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		double val;
+
+		for(int j=0; j<4; j++) { //One for each channel
+			val = pixels[i][j]*(pow(2.0, nbits)-1);
+			double e = val - floor(val);
+			if(e >= pattern[x0%4][y0%4]/16.0)
+				val = ceil(val);
+			else
+				val = floor(val);
+			pixels[i][j] = val / (pow(2.0, nbits) - 1);
+		}
+	}
+
 }
 
 
@@ -666,8 +721,27 @@ FloydSteinbergDither(int nbits)
   // Converts an image to nbits per channel using Floyd-Steinberg dither.
   // with error diffusion.
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "FloydSteinbergDither(%d) not implemented\n", nbits);
+	for(int y0=0; y0<height; y0++) {
+		for(int x0=0; x0<width; x0++) {
+			double prev;
+			Pixel(x0, y0).Clamp(1);
+			for(int j=0; j<4; j++) { //One for each channel
+				prev = Pixel(x0, y0)[j];
+				Pixel(x0, y0)[j] = round(prev*(pow(2.0, nbits)-1)) / (pow(2.0, nbits)-1);
+
+				double e = prev - Pixel(x0, y0)[j];
+
+				if(x0 + 1 < width)
+					Pixel(x0+1, y0)[j] += 7.0/16.0 * e;
+				if(x0 - 1 >= 0 && y0 + 1 < height)
+					Pixel(x0-1, y0+1)[j]+= 3.0/16.0 * e;
+				if(y0 + 1 < height)
+					Pixel(x0, y0+1)[j] += 5.0/16.0 * e;
+				if(x0 + 1 < width && y0 + 1 < height)
+					Pixel(x0+1, y0+1)[j] += 1.0/16.0 * e;
+			}
+		}
+	}
 }
 
 
