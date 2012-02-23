@@ -21,23 +21,24 @@
 *(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
 22 points
 
+--IMPORTANT NOT DONE--
+Composite: Currnetly needs to be the same size. Also blue is 1.0 and black 0.0. alpha right? Or not? Bottom mask has to be all blue right?
+Makefile for composite
+Makefile for morph
+fix Gaussian Blur 0.0
+Increase motion blur / perhaps try different image
+Rotation for 5.3 wrong
+
 --NOT DONE--
 
+Morph clean up duplicated code
+Median looks shitty
 Reverse line on Contrast/Saturation to preserve alpha
 Comment Gaussian
 Motion blur: Check left edge?
 Median: It's square atm. that ok?
-Check Makefile to produce more than 1 version of filter
-Bilateral: Weird purple ringing? (maybe this was jpeg artifacts)
 Scaling : choose better sigma
 Blur: Change to use sample?
-Makefile for dithers
-Composite: Currnetly needs to be the same size. Also blue is 1.0 and black 0.0
-alpha right? Or not? Bottom mask has to be all blue right?
-Makefile for composite
-Makefile for morph
-Morph clean up duplicated code
-Makefile for fun
 
 (up to 3) Nonphotorealism: Implement any non-trivial painterly filter. For inspiration, take a look at the effects available in programs like xv, PhotoShop, and Image Composer, or GIMP (e.g., impressionist, charcoal, stained glass, etc.). The points awarded for this feature will depend on the creativity and difficulty of the filter. At most one such filter will receive points.
 (up to 3) Anything else: Implement any non-trivial image processing algorithm of your own choosing, and we will give you points according to the difficulty.
