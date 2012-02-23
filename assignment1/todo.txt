@@ -18,7 +18,8 @@
 *(2) Floyd-Steinberg dither: Convert an image to a given number of bits per channel, using dithering with error diffusion.
 *(1) Composite: Compose one image with a second image using the over operator, with a third image as a matte (alpha).
 *(3) Morph: Use pairs of corresponding lines to morph a source image into a target image using a morph parameter t. See [Beier92]. Use the provided line correspondence editor to define the line correspondences.
-20 points
+*(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
+22 points
 
 --NOT DONE--
 
@@ -36,7 +37,7 @@ alpha right? Or not? Bottom mask has to be all blue right?
 Makefile for composite
 Makefile for morph
 Morph clean up duplicated code
+Makefile for fun
 
-*(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
 (up to 3) Nonphotorealism: Implement any non-trivial painterly filter. For inspiration, take a look at the effects available in programs like xv, PhotoShop, and Image Composer, or GIMP (e.g., impressionist, charcoal, stained glass, etc.). The points awarded for this feature will depend on the creativity and difficulty of the filter. At most one such filter will receive points.
 (up to 3) Anything else: Implement any non-trivial image processing algorithm of your own choosing, and we will give you points according to the difficulty.

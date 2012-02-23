@@ -611,9 +611,24 @@ void R2Image::
 Fun(int sampling_method)
 {
   // Warp an image using a creative filter of your choice.
+	
+	R2Image orig2(*this);
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Fun(%d) not implemented\n", sampling_method);
+	for(int i=0; i<npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		
+		double x_orig = x0 + 10.0*cos(2*M_PI * ((double)y0) / 20.0);
+		double y_orig = y0;
+
+		if(x_orig < 0 || x_orig >= width || y_orig < 0 || y_orig >= height) {
+			pixels[i] = R2Pixel(0,0,0,1);
+		}
+		else {
+			double sigma_x = 0.5, sigma_y = 0.5;
+			pixels[i] = orig2.Sample(x_orig, y_orig, sampling_method, sigma_x, sigma_y);
+		}
+	}
 }
 
 
