@@ -781,9 +781,54 @@ Morph(const R2Image& target,
   double t, int sampling_method)
 {
   // Morph this source image towards a passed target image by t using pairwise line segment correspondences
+	R2Image orig(*this);
+	
+	for(int i=0; i<npixels; i++) {
+		pixels[i].Reset(0,0,0,1);
+		int x0 = i/height;
+		int y0 = i%height;
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Morph not implemented\n");
+		R2Vector Dsum(0,0);
+		double weightsum = 0;
+		R2Point X(x0, y0);
+
+		for(int j=0; j<nsegments; j++) {
+			R2Point P = source_segments[j].Start();
+			R2Point Q = source_segments[j].End();
+
+			double u = (X-P).Dot(Q-P) / (Q-P).Dot(Q-P);
+
+			R2Vector perp = Q-P;
+			perp.Rotate(M_PI/2.0);
+			double v = (X-P).Dot(perp) / sqrt((Q-P).Dot(Q-P));
+
+			R2Point P_ = target_segments[j].Start();
+			R2Point Q_ = target_segments[j].End();
+			R2Vector perp_ = Q_ - P_;
+			perp_.Rotate(M_PI/2.0);
+			R2Point X_ = P_ + u*(Q_ - P_) + v*perp_/sqrt((Q_-P_).Dot(Q_-P_));
+
+			R2Vector D = X_ - X;
+			R2Point closestpoint = source_segments[j].Line().ClosestPoint(X);
+			double dist = sqrt((X - closestpoint).Dot(X-closestpoint));
+
+			double a = 0.5;
+			double b = 1;
+			double p = 0.5;
+			double weight = pow(pow(source_segments[j].Length(), p) / (a+dist), b);
+			Dsum += D*weight;
+			weightsum += weight;
+
+		}
+		R2Point X_ = X + Dsum / weightsum;
+
+		int x1 = X_.X();
+		int y1 = X_.Y();
+		if(x1 > 0 && x1 < width && y1 > 0 && y1 < height)
+			pixels[i] = orig.Sample(x1, y1, sampling_method, 0.5, 0.5);
+	}
+
+
 }
 
 void R2Image::
