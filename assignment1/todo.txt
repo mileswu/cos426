@@ -12,6 +12,12 @@
 *(2) Bilateral Filter: Smooth while preserving sharp edges in the original. See here.
 *(2) Scale: Scale an image up or down by a real valued factor.
 (2) Rotate: Rotate an image by a given angle.
+(1/3) Quantize: Change the number of bits per channel of an image, using simple rounding.
+(2/3) Random dither: Convert an image to a given number of bits per channel, using a random threshold.
+(2) Ordered dither: Convert an image to a given number of bits per channel, using a 4x4 ordered dithering matrix.
+*(2) Floyd-Steinberg dither: Convert an image to a given number of bits per channel, using dithering with error diffusion.
+
+16 points
 
 --NOT DONE--
 
@@ -23,15 +29,13 @@ Check Makefile to produce more than 1 version of filter
 Bilateral: Weird purple ringing? (maybe this was jpeg artifacts)
 Scaling : choose better sigma
 Blur: Change to use sample?
+Makefile for dithers
+Composite: Currnetly needs to be the same size. Also blue is 1.0 and black 0.0
+alpha right? Or not? Bottom mask has to be all blue right?
+Makefile for composite
 
 
 *(2) Fun: Warp an image using a non-linear mapping of your choice (examples are fisheye, sine, bulge, swirl).
-Dithering Operations
-(1/3) Quantize: Change the number of bits per channel of an image, using simple rounding.
-(2/3) Random dither: Convert an image to a given number of bits per channel, using a random threshold.
-(2) Ordered dither: Convert an image to a given number of bits per channel, using a 4x4 ordered dithering matrix.
-*(2) Floyd-Steinberg dither: Convert an image to a given number of bits per channel, using dithering with error diffusion.
-Miscellaneous
 *(1) Composite: Compose one image with a second image using the over operator, with a third image as a matte (alpha).
 *(3) Morph: Use pairs of corresponding lines to morph a source image into a target image using a morph parameter t. See [Beier92]. Use the provided line correspondence editor to define the line correspondences.
 (up to 3) Nonphotorealism: Implement any non-trivial painterly filter. For inspiration, take a look at the effects available in programs like xv, PhotoShop, and Image Composer, or GIMP (e.g., impressionist, charcoal, stained glass, etc.). The points awarded for this feature will depend on the creativity and difficulty of the filter. At most one such filter will receive points.

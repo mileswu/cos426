@@ -287,8 +287,8 @@ int
 		//Miscellaneous
 		else if (!strcmp(*argv, "-composite")) {
 			CheckOption(*argv, argc, 5);
-			R2Image *top_image = new R2Image(argv[2]);
-			R2Image *bottom_mask = new R2Image(argv[1]);
+			R2Image *top_image = new R2Image(argv[1]);
+			R2Image *bottom_mask = new R2Image(argv[2]);
 			R2Image *top_mask = new R2Image(argv[3]);
 			int operation = atoi(argv[4]);
 			argv += 5, argc -= 5;

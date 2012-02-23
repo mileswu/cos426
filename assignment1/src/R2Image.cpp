@@ -754,17 +754,25 @@ CopyChannel(const R2Image& from_image, int from_channel, int to_channel)
   // Copies one channel of an image (e.g., R2_IMAGE_RED_CHANNEL).  
   // to another channel
 
-  // IMPLEMENT AS PREREQUISITE OF THE Composite() ASSIGNMENT  (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "CopyChannel not implemented\n");
+	for(int x0=0; x0<width; x0++) {
+		for(int y0=0; y0<height; y0++) {
+			Pixel(x0,y0)[to_channel] = from_image.Pixel(x0,y0)[from_channel];
+		}
+	}
 }
 
 void R2Image::
 Composite(const R2Image& top, int operation)
 {
   // Composite passed image on top of this one using operation OVER
+	
+	for(int i=0; i<npixels; i++) {
+		double alphatop = top.pixels[i].Alpha();
+		double alphabottom = pixels[i].Alpha();
 
-  // FILL IN IMPLEMENTATION HERE (REMOVE PRINT STATEMENT WHEN DONE)
-  fprintf(stderr, "Composite not implemented\n");
+		pixels[i] = alphatop * top.pixels[i] + alphabottom * (1 - alphatop) * pixels[i];
+		pixels[i].SetAlpha(alphatop + alphabottom * (1-alphatop));
+	}
 }
 
 void R2Image::
