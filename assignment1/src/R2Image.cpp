@@ -781,10 +781,56 @@ Morph(const R2Image& target,
   double t, int sampling_method)
 {
   // Morph this source image towards a passed target image by t using pairwise line segment correspondences
-	R2Image orig(*this);
+	R2Image orig_s(*this);
 	
 	for(int i=0; i<npixels; i++) {
 		pixels[i].Reset(0,0,0,1);
+		int x0 = i/height;
+		int y0 = i%height;
+
+		R2Vector Dsum(0,0);
+		double weightsum = 0;
+		R2Point X(x0, y0);
+
+		for(int j=0; j<nsegments; j++) {
+			R2Point P = target_segments[j].Start();
+			R2Point Q = target_segments[j].End();
+
+			double u = (X-P).Dot(Q-P) / (Q-P).Dot(Q-P);
+
+			R2Vector perp = Q-P;
+			perp.Rotate(M_PI/2.0);
+			double v = (X-P).Dot(perp) / sqrt((Q-P).Dot(Q-P));
+
+			R2Point P_ = t*source_segments[j].Start() + (1-t)*target_segments[j].Start();
+			R2Point Q_ = t*source_segments[j].End() + (1-t)*target_segments[j].End();
+			R2Vector perp_ = Q_ - P_;
+			perp_.Rotate(M_PI/2.0);
+			R2Point X_ = P_ + u*(Q_ - P_) + v*perp_/sqrt((Q_-P_).Dot(Q_-P_));
+
+			R2Vector D = X_ - X;
+			R2Point closestpoint = target_segments[j].Line().ClosestPoint(X);
+			double dist = sqrt((X - closestpoint).Dot(X-closestpoint));
+
+			double a = 0.5;
+			double b = 1;
+			double p = 0.5;
+			double weight = pow(pow(target_segments[j].Length(), p) / (a+dist), b);
+			Dsum += D*weight;
+			weightsum += weight;
+
+		}
+		R2Point X_ = X + Dsum / weightsum;
+
+		int x1 = X_.X();
+		int y1 = X_.Y();
+		if(x1 > 0 && x1 < width && y1 > 0 && y1 < height)
+			pixels[i] = orig_s.Sample(x1, y1, sampling_method, 0.5, 0.5);
+	}
+	
+	R2Image targetc(target);
+	R2Image targetn(width, height);
+	for(int i=0; i<npixels; i++) {
 		int x0 = i/height;
 		int y0 = i%height;
 
@@ -802,8 +848,8 @@ Morph(const R2Image& target,
 			perp.Rotate(M_PI/2.0);
 			double v = (X-P).Dot(perp) / sqrt((Q-P).Dot(Q-P));
 
-			R2Point P_ = target_segments[j].Start();
-			R2Point Q_ = target_segments[j].End();
+			R2Point P_ = t*source_segments[j].Start() + (1-t)*target_segments[j].Start();
+			R2Point Q_ = t*source_segments[j].End() + (1-t)*target_segments[j].End();
 			R2Vector perp_ = Q_ - P_;
 			perp_.Rotate(M_PI/2.0);
 			R2Point X_ = P_ + u*(Q_ - P_) + v*perp_/sqrt((Q_-P_).Dot(Q_-P_));
@@ -825,10 +871,14 @@ Morph(const R2Image& target,
 		int x1 = X_.X();
 		int y1 = X_.Y();
 		if(x1 > 0 && x1 < width && y1 > 0 && y1 < height)
-			pixels[i] = orig.Sample(x1, y1, sampling_method, 0.5, 0.5);
+			targetn.Pixel(x0,y0) = targetc.Sample(x1, y1, sampling_method, 0.5, 0.5);
 	}
 
-
+	for(int i=0; i<npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		pixels[i] = (1-t) * pixels[i] + t*targetn.Pixel(x0,y0);
+	}
 }
 
 void R2Image::
