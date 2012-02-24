@@ -2,7 +2,7 @@
 
 <head>
  <title>
-  COS 426 Assignment 0
+  COS 426 Assignment 1
  </title>
 </head>
 
@@ -12,9 +12,9 @@
 
 <center>
 <h2>
-COS 426, Spring 2010
+COS 426, Spring 2012
 <br>
-NAME, LOGIN           <!-- Fill in your name and login -->
+Miles Wu, mawu           <!-- Fill in your name and login -->
 </h2>                     
 </center>
 
@@ -27,7 +27,7 @@ NAME, LOGIN           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-<h3>Brightness change</h3>
+<h3>Black and White</h3>
 <table>
  <tr>
   <td>
@@ -36,15 +36,630 @@ NAME, LOGIN           <!-- Fill in your name and login -->
    </a>
   </td>
   <td>
-   <a href="output/globos_brightness_0.5.jpg">
-    <img width=200 src="output/globos_brightness_0.5.jpg">
+   <a href="output/globos_blackandwhite.jpg">
+    <img width=200 src="output/globos_blackandwhite.jpg">
    </a>
   </td>
                 <!-- Add more here -->
  </tr>
  <tr>
   <td align="center"> Input </td>
-  <td align="center"> Brightness 50% </td>
+  <td align="center"> Black and White </td>
+ </tr>
+</table>
+
+<h3>Gamma</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gamma0.5.jpg">
+    <img width=200 src="output/globos_gamma0.5.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gamma1.jpg">
+    <img width=200 src="output/globos_gamma1.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gamma2.jpg">
+    <img width=200 src="output/globos_gamma2.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Gamma 0.5 </td>
+  <td align="center"> Gamma 1.0 (unchanged) </td>
+  <td align="center"> Gamma 2.0 </td>
+ </tr>
+</table>
+
+<h3>Saturation</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_saturation0.5.jpg">
+    <img width=200 src="output/globos_saturation0.5.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_saturation1.jpg">
+    <img width=200 src="output/globos_saturation1.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_saturation2.5.jpg">
+    <img width=200 src="output/globos_saturation2.5.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Saturation 0.5 </td>
+  <td align="center"> Saturation 1.0 (unchanged) </td>
+  <td align="center"> Saturation 2.5 </td>
+ </tr>
+</table>
+
+<h3>Contrast</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_contrast0.5.jpg">
+    <img width=200 src="output/globos_contrast0.5.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_contrast1.jpg">
+    <img width=200 src="output/globos_contrast1.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_contrast1.5.jpg">
+    <img width=200 src="output/globos_contrast1.5.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Contrast 0.5 </td>
+  <td align="center"> Contrast 1.0 (unchanged) </td>
+  <td align="center"> Contrast 2.5 </td>
+ </tr>
+</table>
+
+<h3>Extract Channel</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_extractred.jpg">
+    <img width=200 src="output/globos_extractred.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_extractgreen.jpg">
+    <img width=200 src="output/globos_extractgreen.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_extractblue.jpg">
+    <img width=200 src="output/globos_extractblue.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Extract Red </td>
+  <td align="center"> Extract Green </td>
+  <td align="center"> Extract Blue </td>
+ </tr>
+</table>
+
+<h3>Gaussian Blur</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gaussian0.jpg">
+    <img width=200 src="output/globos_gaussian0.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gaussian3.jpg">
+    <img width=200 src="output/globos_gaussian3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_gaussian6.jpg">
+    <img width=200 src="output/globos_gaussian6.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Blur 0.0 (unchanged) </td>
+  <td align="center"> Blur 3.0 </td>
+  <td align="center"> Blur 6.0 </td>
+ </tr>
+</table>
+
+<h3>Sharpen</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_sharpen.jpg">
+    <img width=200 src="output/globos_sharpen.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Sharpen </td>
+ </tr>
+</table>
+
+<h3>Edge Detect</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_edge.jpg">
+    <img width=200 src="output/globos_edge.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Edge Detect </td>
+ </tr>
+</table>
+
+<h3>Motion Blur</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_motionblur.jpg">
+    <img width=200 src="output/globos_motionblur.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Motion Blur </td>
+ </tr>
+</table>
+
+<h3>Median</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_median_0.jpg">
+    <img width=200 src="output/globos_median_0.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_median_2.jpg">
+    <img width=200 src="output/globos_median_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_median_5.jpg">
+    <img width=200 src="output/globos_median_5.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Median 0.0 </td>
+  <td align="center"> Median 2.0 </td>
+  <td align="center"> Median 5.0 </td>
+ </tr>
+</table>
+
+<h3>Bilateral Filter</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_bilateral_6_0.3.jpg">
+    <img width=200 src="output/globos_bilateral_6_0.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_bilateral_6_0.1.jpg">
+    <img width=200 src="output/globos_bilateral_6_0.1.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_bilateral_2_0.3.jpg">
+    <img width=200 src="output/globos_bilateral_2_0.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_bilateral_2_0.1.jpg">
+    <img width=200 src="output/globos_bilateral_2_0.1.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Bilateral (domain 6, range 0.3) </td>
+  <td align="center"> Bilateral (domain 6, range 0.1) </td>
+  <td align="center"> Bilateral (domain 2, range 0.3) </td>
+  <td align="center"> Bilateral (domain 2, range 0.1) </td>
+ </tr>
+</table>
+
+<h3>Scale</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_scale_nearest0.7.jpg">
+    <img src="output/globos_scale_nearest0.7.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_scale_bilinear0.7.jpg">
+    <img src="output/globos_scale_bilinear0.7.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_scale_gaussian0.7.jpg">
+    <img src="output/globos_scale_gaussian0.7.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_scale_nearest1.5.jpg">
+    <img src="output/globos_scale_nearest1.5.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_scale_bilinear1,5.jpg">
+    <img src="output/globos_scale_bilinear1.5.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_scale_gaussian1.5.jpg">
+    <img src="output/globos_scale_gaussian1.5.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Scale (0.7x Nearest) </td>
+  <td align="center"> Scale (0.7x Bilinear) </td>
+  <td align="center"> Scale (0.7x Gaussian) </td>
+  <td align="center"> Scale (1.5x Nearest) </td>
+  <td align="center"> Scale (1.5x Bilinear) </td>
+  <td align="center"> Scale (1.5x Gaussian) </td>
+ </tr>
+</table>
+
+<h3>Rotate</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_rotate_nearest_5.3.jpg">
+    <img src="output/globos_rotate_nearest_5.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_rotate_bilinear_5.3.jpg">
+    <img src="output/globos_rotate_nearest_5.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_rotate_gaussian_5.3.jpg">
+    <img src="output/globos_rotate_gaussian_5.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_rotate_nearest_0.3.jpg">
+    <img src="output/globos_rotate_nearest_0.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_rotate_bilinear_0.3.jpg">
+    <img src="output/globos_rotate_nearest_0.3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_rotate_gaussian_0.3.jpg">
+    <img src="output/globos_rotate_gaussian_0.3.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Rotate (5.3rad Nearest) </td>
+  <td align="center"> Rotate (5.3rad Bilinear) </td>
+  <td align="center"> Rotate (5.3rad Gaussian) </td>
+  <td align="center"> Rotate (0.3rad Nearest) </td>
+  <td align="center"> Rotate (0.3rad Bilinear) </td>
+  <td align="center"> Rotate (0.3rad Gaussian) </td>
+ </tr>
+</table>
+
+<h3>Quantize</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_quantize_4.jpg">
+    <img width=200 src="output/globos_quantize_4.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_quantize_3.jpg">
+    <img width=200 src="output/globos_quantize_3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_quantize_2.jpg">
+    <img width=200 src="output/globos_quantize_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_quantize_1.jpg">
+    <img width=200 src="output/globos_quantize_1.jpg">
+   </a>
+  </td>
+
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Quantize 4 bits </td>
+  <td align="center"> Quantize 3 bits </td>
+  <td align="center"> Quantize 2 bits </td>
+  <td align="center"> Quantize 1 bits </td>
+ </tr>
+</table>
+
+<h3>Random Dither</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_randomdither_4.jpg">
+    <img width=200 src="output/globos_randomdither_4.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_randomdither_3.jpg">
+    <img width=200 src="output/globos_randomdither_3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_randomdither_2.jpg">
+    <img width=200 src="output/globos_randomdither_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_randomdither_1.jpg">
+    <img width=200 src="output/globos_randomdither_1.jpg">
+   </a>
+  </td>
+
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Random dither 4 bits </td>
+  <td align="center"> Random dither 3 bits </td>
+  <td align="center"> Random dither 2 bits </td>
+  <td align="center"> Random dither 1 bits </td>
+ </tr>
+</table>
+
+<h3>Random Dither</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_ordereddither_4.jpg">
+    <img width=200 src="output/globos_ordereddither_4.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_ordereddither_3.jpg">
+    <img width=200 src="output/globos_ordereddither_3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_ordereddither_2.jpg">
+    <img width=200 src="output/globos_ordereddither_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_ordereddither_1.jpg">
+    <img width=200 src="output/globos_ordereddither_1.jpg">
+   </a>
+  </td>
+
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Ordered dither 4 bits </td>
+  <td align="center"> Ordered dither 3 bits </td>
+  <td align="center"> Ordered dither 2 bits </td>
+  <td align="center"> Ordered dither 1 bits </td>
+ </tr>
+</table>
+
+<h3>Floyd-Steinberg Dithering</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_floyddither_4.jpg">
+    <img width=200 src="output/globos_floyddither_4.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_floyddither_3.jpg">
+    <img width=200 src="output/globos_floyddither_3.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_floyddither_2.jpg">
+    <img width=200 src="output/globos_floyddither_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_floyddither_1.jpg">
+    <img width=200 src="output/globos_floyddither_1.jpg">
+   </a>
+  </td>
+
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Floyd-steinberg dither 4 bits </td>
+  <td align="center"> Floyd-steinberg dither 3 bits </td>
+  <td align="center"> Floyd-steinberg dither 2 bits </td>
+  <td align="center"> Floyd-steinberg dither 1 bits </td>
+ </tr>
+</table>
+
+
+<h3>Floyd-Steinberg Dithering</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+
+  <td>
+   <a href="output/globos_fun.jpg">
+    <img width=200 src="output/globos_fun.jpg">
+   </a>
+  </td>
+
+
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Fun </td>
+ </tr>
+</table>
+
+<h3>Sobel Filter</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores.jpg">
+    <img width=200 src="input/globos_de_colores.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_sobel.jpg">
+    <img width=200 src="output/globos_sobel.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Input </td>
+  <td align="center"> Sobel Filter </td>
  </tr>
 </table>
 
@@ -56,8 +671,30 @@ NAME, LOGIN           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-<p>
-Tell us how you implemented the algorithms
+<ul>
+	<li><strong>Black and White:</strong> The luminance of each pixel is calculated and the red, green and blue components of each pixel are set to this luminance.</li>
+	<li><strong>Gamma:</strong> For each pixel and its red/green/blue component, the value is taken to the power of gamma (v^gamma).</li>
+	<li><strong>Saturation:</strong> A greyscale version of the image is produced. For each pixel, a linear combination of the original pixel and the greyscale pixel is output. To decrease the saturation it uses a mixture of the original and the grey pixel, and to increase the saturation it takes a larger multiple of the original and subtracts some of the grey pixel. The formula used is: output = (1-factor)*grey + factor*original, where factor>1 is increased saturation and the opposite is decreased saturation.</li>
+	<li><strong>Contrast:</strong> A solid grey image is produced with the grey value being the average luminance of the original image. For each pixel, a linear combination of the original pixel and the grey pixel is output. To decrease the contrast it uses a mixture of the original and the grey pixel, and to increase the contrast it takes a larger multiple of the original and subtracts some of the grey pixel. The formula used is: output = (1-factor)*grey + factor*original, where factor>1 is increased contrast and the opposite is decreased contrast.</li>
+	<li><strong>Extract Channel:</strong> For each pixel, color channels other than the one selected are set to zero.</li>
+	<li><strong>Gaussian Blur:</strong> For each pixel in the output image, we take a rectangular region centered at the output pixel from the source image (size being six sigma, as by this point the contribution is minimal) to convolve with. The convolution adds these source pixels with a weight derived from a Gaussian function (exp(-dist^2/2/sigma^2)) to the target pixel. Lastly this target pixel is normalized to keep the values between 0 and 1.</li>
+	<li><strong>Sharpen:</strong> A blurred version of the image is produced (using Gaussian blur with sigma=2.0). For each pixel, double the original pixel value minus the blurred pixel value is output. The formula used is: output = 2*original - blurred.</li>
+	<li><strong>Edge Detect:</strong> For each pixel in the output image, we take look at 9 pixels in the source image in the shape of 3x3 square centered at the target pixel position. We take eight times the center pixel's value and subtract from this each of the surrounding pixels. Lastly this target pixel is divided by sixteen in order to normalize.</li>
+	<li><strong>Motion Blur:</strong> For each pixel in the output image, we take a single pixel width line of pixels from source image, originating at the position of the target pixel and extending to the left. These pixels are added together with a weight corresponding to the distance away from the target pixel position and then the value normalized to keep the range between 0 and 1. The weights are determined by a linear ramp where the right hand side has the most weight.</li>
+	<li><strong>Median:</strong> We look at a rectangular region in the source image surrounding the target pixel of size 2sigma x 2sigma. For each channel we add all the pixel values to an array, which is sorted and then the median value chosen to be used in the output image.</li>
+	<li><strong>Bilateral:</strong> For each pixel in the output image, we take a rectangular region centered at the output pixel from the source image (size being six domain sigma, as by this point the contribution is minimal) to convolve with. The convolution adds these source pixels with a weight derived from the product of two Gaussian function to the target pixel. The first Gaussian function is a function of distance to the target pixel (exp(-dist^2/2/domainsigma^2)) and the second Gaussian function is a function of the visual similarity (exp(-similarity^2/2/rangesigma^2)). Similarity is defined as square root of the sum of the differences in pixel channel values squared. Lastly this target pixel is normalized to keep the values between 0 and 1.</li>
+	<li><strong>Sample (nearest neighbour):</strong> This finds the closest pixel (via round) in the source image to the position requested and returns it.</li>
+	<li><strong>Sample (bilinear):</strong> This looks at the four pixels immediately surrounding the requested position. At first a linear combination of the top two are created using (1-dx) as the weights, where dx is the x distance from the pixel to the requested position. Another combination is made for the bottom two. Finally these two combinations are combined using (1-dy) as the weights, where dy is the y distance from the pixel to the requested position. This final combination is returned.</li>
+	<li><strong>Sample (gaussian):</strong> This looks at pixels surrounding the requested position in the source image (a rectangle of 6 sigma x 6 sigma). Each one is summed together with a weight defined by the Gaussian function (exp(-dx^2/2/sigmay^2)exp(-dy^2/2/sigmay^2)), where dx is the x distance from the pixel being summed and the requested position and dy is the y distance from the pixel being summed and the requested position. Finally this sum is normalized so that the values are between 0 and 1 and returned.</li>
+	<li><strong>Scale:</strong> The new sized image is created by multiplying the width by sx and the height by sy. For each pixel in the new target image, we calculate using sx and sy the pixel position in the source image and we pass this to the sample function (described above) to create the target pixel.</li>
+	<li><strong>Rotate:</strong> First the canvas is expanded and filled with black in order to be able to keep the entire rotated image within view. For each target pixel the source pixel position is calculated by x = (x' - center_x') cos(-angle) - (y' - center_y') sin(-angle) + center_x' and y = (x' - center_x') sin(-angle) + (y' - center_y') cos(-angle) + center_y'. This performs a rotation about the center. This pixel position is passed to the sample function (described above) to create the target pixel.</li>
+	<li><strong>Quantize:</strong> For each pixel and each of its red/green/blue component, the value is rounded to the closest level. The number of levels is 2^n, where n is the number of bits.</li>
+	<li><strong>Random Dither:</strong> For each pixel and each of its red/green/blue component, the value minus the level just below its value (floor) is compared to a random number from zero to one. If it is larger than the random number, the pixel is set to the level above its value (ceil), and if it is smaller, then it is set to the level below its value (floor). The number of levels is 2^n, where n is the number of bits.</li>
+	<li><strong>Ordered Dither:</strong> For each pixel and each of its red/green/blue component, the value minus the level just below its value (floor) is compared to a value from the pattern. The pattern is a 4x4 matrix and to lookup a value we use x mod 4 and y mod 4. If it is larger than the pattern value, the pixel is set to the level above its value (ceil), and if it is smaller, then it is set to the level below its value (floor). The number of levels is 2^n, where n is the number of bits.</li>
+	<li><strong>Floyd-Steinberg Dither:</strong> For each pixel and each of its red/green/blue component, the value is rounded to the closest level. An quantization error is calculated by subtracting the rounded value from the original value and is diffused to neighbouring pixels by this formula: the pixel to the right is increased by 7/16 of the error, the pixel to the bottom is increased by 5/16 of the error, the pixel to the bottom right is increased by 1/16 of the error and the pixel to bottom left is increased by 3/16 of the error. The number of levels is 2^n, where n is the number of bits.</li>
+	<li><strong>Fun:</strong> This makes ripples in the image. For each target pixel the source pixel position is calculated by x = x' + 10 cos(2 pi y' / 20) and y = y'. This causes waves of period 20 vertical pixels and amplitude 10 horizontal pixels.  This pixel position is passed to the sample function (described above) to create the target pixel.</li>
+	<li><strong>Sobel:</strong> For each target pixel two linear combinations of the 8 surrounding pixels and the source pixel are made, according to these two matrices: [[-1, 0, +1], [-2, 0, +2], [-1, 0 +1]] and [[-1, -2, -1], [0, 0, 0], [+1, +2, +1]]. These two linear combinations are then normalized, squared, added together and square rooted. This final value is set as the R/G/B values of that target pixel.</li>
+</ul>
 
 <br><hr></br>
 
@@ -69,19 +706,19 @@ Tell us how you implemented the algorithms
 
 <dl>
   <dt>How long did you spend on this assignment?
-  <dd>Your answer goes here
+  <dd>20 hours.
 
   <dt>Was it too hard, too easy, or just right?
-  <dd>Your answer goes here
+  <dd>Wasn't too hard, but was too long.
 
   <dt>What was the best part of the assignment?
-  <dd>Your answer goes here
+  <dd>Coding.
 
   <dt>What was the worst part of the assignment?
-  <dd>Your answer goes here
+  <dd>Makefile and HTML writeup.
 
   <dt>How could it be improved for next year?
-  <dd>Your answer goes here
+  <dd>Remove writeup requirement.
 
 </dl>
 
