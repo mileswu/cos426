@@ -258,10 +258,13 @@ void R2Image::
 Blur(double sigma)
 {
   // Blur an image with a Gaussian filter with a given sigma.
+	if(sigma == 0) return;
+
 	ApplyGamma(2.2);
 	R2Image original(*this);
 
 	int size = 3*sigma;
+	if(size < 1) size = 1;
 	std::vector<double> col(size+1, 0.0);
 	std::vector<std::vector<double> > gaussiankernel(size+1, col);
 	for(int i=0; i<=size; i++) {
@@ -306,9 +309,8 @@ Sharpen()
   }
 }
 
-
 void R2Image::
-EdgeDetect(void)
+Sobel(void)
 {
   // Detect edges in an image.
 	ApplyGamma(2.2);
@@ -348,7 +350,43 @@ EdgeDetect(void)
 	ApplyGamma(1.0/2.2);
 }
 
+void R2Image::
+EdgeDetect(void)
+{
+  // Detect edges in an image.
+	ApplyGamma(2.2);
+	R2Image orig(*this);
+	
+	for (int i = 0; i < npixels; i++) {
+		int x0 = i/height;
+		int y0 = i%height;
+		
+		R2Pixel p(0.0, 0.0, 0.0, 1.0);
+		double counter = 0;
 
+		for(int x = x0 - 1; x <= x0 + 1; x++) {
+			if(x < 0) continue;
+			if(x >= width) continue;
+			for(int y = y0 - 1; y <= y0 + 1; y++) {
+				if(y < 0) continue;
+				if(y >= height) continue;
+
+				if(x == x0 && y == y0) {
+					p += 8*orig.Pixel(x,y);
+					counter += 8;
+				} else {
+					p += -1.0*orig.Pixel(x,y);
+					counter++;
+				}
+			}
+		}
+		
+		p /= counter;
+		pixels[i] = p;
+	}
+
+	ApplyGamma(1.0/2.2);
+}
 
 void R2Image::
 MotionBlur(int amount)
@@ -433,6 +471,8 @@ BilateralFilter(double rangesigma, double domainsigma)
 	R2Image orig(*this);
 
 	int size = 3*domainsigma;
+	if(size < 1) size = 1;
+
 	std::vector<double> col(size+1, 0.0);
 	std::vector<std::vector<double> > gaussiankernel(size+1, col);
 	for(int i=0; i<=size; i++) {
@@ -486,7 +526,9 @@ R2Pixel R2Image::Sample(double x0, double y0, int sampling_method, double sigma_
 		R2Pixel p(0.0, 0.0, 0.0, 1.0);
 		double total=0;
 		int size_x = sigma_x * 3;
+		if(size_x < 1) size_x = 1;
 		int size_y = sigma_y * 3;
+		if(size_y < 1) size_y = 1;
 
 		for(int x = (x_orig - size_x < 0 ? 0 : x_orig - size_x); x < (x_orig + size_x + 1 > width ? width : x_orig + size_x + 1); x++) {
 			for(int y = (y_orig - size_y < 0 ? 0 : y_orig - size_y); y < (y_orig + size_y + 1 > height ? height : y_orig + size_y + 1); y++) {
@@ -537,7 +579,6 @@ Scale(double sx, double sy, int sampling_method)
 		double x_orig = ((double)orig.width) / ((double)width) * x0 + xoffset; 
 		double y_orig = ((double)orig.height) / ((double)height) * y0 + yoffset; 
 
-		// These really suck right now
 		double sigma_x = 1.0/3.0/sx, sigma_y = 1.0/3.0/sy;
 		if(sx > 1.0) { sigma_x = 0.5; }
 		if(sy > 1.0) { sigma_y = 0.5; }
@@ -551,23 +592,10 @@ Rotate(double angle, int sampling_method)
 {
   // Rotate an image by the given angle.
 	
-	// Check range of angle 0-360
-	
 	// Expand canvas
 	R2Image orig(*this);
-	if(angle < M_PI/2) {
-		width = ((double)orig.width)*cos(angle) + ((double)orig.height)*sin(angle);
-		height = ((double)orig.width)*sin(angle) + ((double)orig.height)*cos(angle);
-	} else if(angle < M_PI) {
-		width = -(((double)orig.width)*cos(angle) - ((double)orig.height)*sin(angle));
-		height = ((double)orig.width)*sin(angle) - ((double)orig.height)*cos(angle);
-	} else if(angle < 3.0*M_PI/2.0) {
-		width = -(((double)orig.width)*cos(angle) + ((double)orig.height)*sin(angle));
-		height = -(((double)orig.width)*sin(angle) + ((double)orig.height)*cos(angle));
-	} else {
-		width = ((double)orig.width)*cos(angle) - ((double)orig.height)*sin(angle);
-		height = -(((double)orig.width)*sin(angle) - ((double)orig.height)*cos(angle));
-	}
+	width = sqrt(orig.width*orig.width + orig.height*orig.height);
+	height = sqrt(orig.width*orig.width + orig.height*orig.height);
 
 	delete [] pixels;
 	npixels = width*height;
@@ -595,6 +623,7 @@ Rotate(double angle, int sampling_method)
 		
 		double x_orig = (x0-xoffset)*cos(-angle) - (y0-yoffset)*sin(-angle) + xoffset;
 		double y_orig = (x0-xoffset)*sin(-angle) + (y0-yoffset)*cos(-angle) + yoffset;
+		//double x_orig = x0, y_orig = y0;
 
 		if(x_orig < 0 || x_orig >= width || y_orig < 0 || y_orig >= height) {
 			pixels[i] = R2Pixel(0,0,0,1);
@@ -677,22 +706,6 @@ OrderedDither(int nbits)
   // with a 4x4 Bayer's pattern matrix.
 	std::vector<double> col(4, 0.0);
 	std::vector<std::vector<double> > pattern(4, col);
-	/*pattern[0][0] = 15;
-	pattern[0][1] = 3;
-	pattern[0][2] = 12;
-	pattern[0][3] = 0;
-	pattern[1][0] = 7;
-	pattern[1][1] = 11;
-	pattern[1][2] = 4;
-	pattern[1][3] = 8;
-	pattern[2][0] = 13;
-	pattern[2][1] = 1;
-	pattern[2][2] = 14;
-	pattern[2][3] = 2;
-	pattern[3][0] = 5;
-	pattern[3][1] = 9;
-	pattern[3][2] = 6;
-	pattern[3][3] = 10;*/
 	pattern[0][0] = 1;
 	pattern[0][1] = 13;
 	pattern[0][2] = 4;

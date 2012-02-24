@@ -11,7 +11,7 @@ IMGS=output/globos_blackandwhite.jpg \
 		 output/globos_extractred.jpg output/globos_extractgreen.jpg output/globos_extractblue.jpg\
 		 output/globos_gaussian3.jpg output/globos_gaussian6.jpg output/globos_gaussian0.jpg  \
 		 output/globos_sharpen.jpg \
-		 output/globos_edge.jpg output/globos_motionblur.jpg \
+		 output/globos_edge.jpg output/globos_motionblur.jpg output/globos_sobel.jpg \
 		 output/globos_median_5.jpg output/globos_median_2.jpg output/globos_median_0.jpg \
 		 output/globos_bilateral_2_0.1.jpg output/globos_bilateral_2_0.3.jpg output/globos_bilateral_6_0.3.jpg output/globos_bilateral_6_0.1.jpg \
 		 output/globos_scale_gaussian0.7.jpg output/globos_scale_nearest0.7.jpg output/globos_scale_bilinear0.7.jpg \
@@ -22,7 +22,10 @@ IMGS=output/globos_blackandwhite.jpg \
 		 output/globos_randomdither_4.jpg output/globos_randomdither_3.jpg output/globos_randomdither_2.jpg output/globos_randomdither_1.jpg \
 		 output/globos_ordereddither_4.jpg output/globos_ordereddither_3.jpg output/globos_ordereddither_2.jpg output/globos_ordereddither_1.jpg \
 		 output/globos_floyddither_4.jpg output/globos_floyddither_3.jpg output/globos_floyddither_2.jpg output/globos_floyddither_1.jpg \
-		 output/globos_fun.jpg
+		 output/globos_fun.jpg \
+		 output/globos_composite.jpg \
+		 output/morph_0.jpg output/morph_2.jpg output/morph_4.jpg output/morph_6.jpg output/morph_8.jpg output/morph_10.jpg \
+		 output/morph.webm
 
 
 all: $(IMGS)
@@ -69,6 +72,8 @@ output/globos_sharpen.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -sharpen
 output/globos_edge.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -edge
+output/globos_sobel.jpg: input/globos_de_colores.jpg
+	$(EXE) $^ $@ -sobel
 output/globos_motionblur.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -motionblur 5
 
@@ -85,7 +90,7 @@ output/globos_bilateral_6_0.1.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -bilateral 6 0.1
 output/globos_bilateral_2_0.3.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -bilateral 2 0.3
-	output/globos_bilateral_2_0.1.jpg: input/globos_de_colores.jpg
+output/globos_bilateral_2_0.1.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -bilateral 2 0.1
 
 output/globos_scale_gaussian0.7.jpg: input/globos_de_colores.jpg
@@ -153,6 +158,25 @@ output/globos_floyddither_1.jpg: input/globos_de_colores.jpg
 
 output/globos_fun.jpg: input/globos_de_colores.jpg
 	$(EXE) $^ $@ -fun
+
+output/globos_composite.jpg: input/globos_de_colores_resized.jpg
+	$(EXE) $^ $@ -composite input/islas_del_rosario_resized.jpg input/bottommask.jpg input/topmask.jpg 0
+
+output/morph_0.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 0
+output/morph_2.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 0.2
+output/morph_4.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 0.4
+output/morph_6.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 0.6
+output/morph_8.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 0.8
+output/morph_10.jpg: input/morph1.jpg
+	$(EXE) $^ $@ -sampling 1 -morph input/morph2.jpg input/morph_correspondences.txt 1
+
+output/morph.webm:
+	./make_video.sh
 
 clean:
 	rm -f $(IMGS)

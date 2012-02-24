@@ -663,6 +663,106 @@ Miles Wu, mawu           <!-- Fill in your name and login -->
  </tr>
 </table>
 
+<h3>Composite</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/globos_de_colores_resized.jpg">
+    <img width=200 src="input/globos_de_colores_resized.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="input/islas_del_rosario_resized.jpg">
+    <img width=200 src="input/islas_del_rosario_resized.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="input/topmask.jpg">
+    <img width=200 src="input/topmask.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="input/bottommask.jpg">
+    <img width=200 src="input/bottommask.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/globos_composite.jpg">
+    <img width=200 src="output/globos_composite.jpg">
+   </a>
+  </td>
+                <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Bottom image </td>
+  <td align="center"> Top image </td>
+  <td align="center"> Top mask </td>
+  <td align="center"> Bottom mask </td>
+  <td align="center"> Composite </td>
+ </tr>
+</table>
+
+<h3>Morph</h3>
+<table>
+ <tr>
+  <td>
+   <a href="input/morph1.jpg">
+    <img width=200 src="input/morph1.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="input/morph2.jpg">
+    <img width=200 src="input/morph2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_0.jpg">
+    <img width=200 src="output/morph_0.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_2.jpg">
+    <img width=200 src="output/morph_2.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_4.jpg">
+    <img width=200 src="output/morph_4.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_6.jpg">
+    <img width=200 src="output/morph_6.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_8.jpg">
+    <img width=200 src="output/morph_8.jpg">
+   </a>
+  </td>
+  <td>
+   <a href="output/morph_10.jpg">
+    <img width=200 src="output/morph_10.jpg">
+   </a>
+  </td>
+      <!-- Add more here -->
+ </tr>
+ <tr>
+  <td align="center"> Source image </td>
+  <td align="center"> Target image </td>
+  <td align="center"> Morph t=0 </td>
+  <td align="center"> Morph t=0.2 </td>
+  <td align="center"> Morph t=0.4 </td>
+  <td align="center"> Morph t=0.6 </td>
+  <td align="center"> Morph t=0.8 </td>
+  <td align="center"> Morph t=1.0 </td>
+ </tr>
+</table>
+
+<h3>Morph video</h3>
+<video src="output/morph.webm" controls>You need a HTML5 browser</video>
+<p>To generate this video, please run "make_video.sh". You must have ffmpeg installed</p>
+
 <br><hr></br>
 
 <!------------------------------------------------------------------------> 
@@ -687,13 +787,15 @@ Miles Wu, mawu           <!-- Fill in your name and login -->
 	<li><strong>Sample (bilinear):</strong> This looks at the four pixels immediately surrounding the requested position. At first a linear combination of the top two are created using (1-dx) as the weights, where dx is the x distance from the pixel to the requested position. Another combination is made for the bottom two. Finally these two combinations are combined using (1-dy) as the weights, where dy is the y distance from the pixel to the requested position. This final combination is returned.</li>
 	<li><strong>Sample (gaussian):</strong> This looks at pixels surrounding the requested position in the source image (a rectangle of 6 sigma x 6 sigma). Each one is summed together with a weight defined by the Gaussian function (exp(-dx^2/2/sigmay^2)exp(-dy^2/2/sigmay^2)), where dx is the x distance from the pixel being summed and the requested position and dy is the y distance from the pixel being summed and the requested position. Finally this sum is normalized so that the values are between 0 and 1 and returned.</li>
 	<li><strong>Scale:</strong> The new sized image is created by multiplying the width by sx and the height by sy. For each pixel in the new target image, we calculate using sx and sy the pixel position in the source image and we pass this to the sample function (described above) to create the target pixel.</li>
-	<li><strong>Rotate:</strong> First the canvas is expanded and filled with black in order to be able to keep the entire rotated image within view. For each target pixel the source pixel position is calculated by x = (x' - center_x') cos(-angle) - (y' - center_y') sin(-angle) + center_x' and y = (x' - center_x') sin(-angle) + (y' - center_y') cos(-angle) + center_y'. This performs a rotation about the center. This pixel position is passed to the sample function (described above) to create the target pixel.</li>
+	<li><strong>Rotate:</strong> First the canvas is expanded and filled with black in order to be able to keep the entire rotated image within view (sqrt(width^2+height^2) for the new dimension for both sides). For each target pixel the source pixel position is calculated by x = (x' - center_x') cos(-angle) - (y' - center_y') sin(-angle) + center_x' and y = (x' - center_x') sin(-angle) + (y' - center_y') cos(-angle) + center_y'. This performs a rotation about the center. This pixel position is passed to the sample function (described above) to create the target pixel.</li>
 	<li><strong>Quantize:</strong> For each pixel and each of its red/green/blue component, the value is rounded to the closest level. The number of levels is 2^n, where n is the number of bits.</li>
 	<li><strong>Random Dither:</strong> For each pixel and each of its red/green/blue component, the value minus the level just below its value (floor) is compared to a random number from zero to one. If it is larger than the random number, the pixel is set to the level above its value (ceil), and if it is smaller, then it is set to the level below its value (floor). The number of levels is 2^n, where n is the number of bits.</li>
 	<li><strong>Ordered Dither:</strong> For each pixel and each of its red/green/blue component, the value minus the level just below its value (floor) is compared to a value from the pattern. The pattern is a 4x4 matrix and to lookup a value we use x mod 4 and y mod 4. If it is larger than the pattern value, the pixel is set to the level above its value (ceil), and if it is smaller, then it is set to the level below its value (floor). The number of levels is 2^n, where n is the number of bits.</li>
 	<li><strong>Floyd-Steinberg Dither:</strong> For each pixel and each of its red/green/blue component, the value is rounded to the closest level. An quantization error is calculated by subtracting the rounded value from the original value and is diffused to neighbouring pixels by this formula: the pixel to the right is increased by 7/16 of the error, the pixel to the bottom is increased by 5/16 of the error, the pixel to the bottom right is increased by 1/16 of the error and the pixel to bottom left is increased by 3/16 of the error. The number of levels is 2^n, where n is the number of bits.</li>
 	<li><strong>Fun:</strong> This makes ripples in the image. For each target pixel the source pixel position is calculated by x = x' + 10 cos(2 pi y' / 20) and y = y'. This causes waves of period 20 vertical pixels and amplitude 10 horizontal pixels.  This pixel position is passed to the sample function (described above) to create the target pixel.</li>
 	<li><strong>Sobel:</strong> For each target pixel two linear combinations of the 8 surrounding pixels and the source pixel are made, according to these two matrices: [[-1, 0, +1], [-2, 0, +2], [-1, 0 +1]] and [[-1, -2, -1], [0, 0, 0], [+1, +2, +1]]. These two linear combinations are then normalized, squared, added together and square rooted. This final value is set as the R/G/B values of that target pixel.</li>
+	<li><strong>Composite:</strong> First of all the blue channel from the masks are copied into the alpha channel of the images. For each target pixel, a combination of the bottom image and the top image are made: alphatop * top + alphabottom * (1-alphatop) * bottom. The final alpha is set by: alphatop + alphabottom * (1-alphatop). </li>
+	<li><strong>Morph:</strong> The transform was done according to the <a href="http://www.cs.princeton.edu/courses/archive/spr12/cos426/papers/Beier92.pdf">paper</a>. The source position from this Beier92 transform was passed to the sample function which produced the output pixel. To create the morph, intermediate line segments were created according to: (1-t)*sourcelines + t*targetlines. Both images were warped to the intermediate line segments and composited together using: (1-t)*image1 + t*image2. </li>
 </ul>
 
 <br><hr></br>

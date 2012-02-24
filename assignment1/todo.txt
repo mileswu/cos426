@@ -24,14 +24,12 @@
 22-25 points
 
 --IMPORTANT NOT DONE--
-Composite: Currnetly needs to be the same size. Also blue is 1.0 and black 0.0. alpha right? Or not? Bottom mask has to be all blue right?
-Makefile for composite
 Makefile for morph
-fix Gaussian Blur 0.0
-Rotation for 5.3 wrong
+Rotation clipping at 1.3
 
 --NOT DONE--
-
+Composite: Currnetly needs to be the same size. Also blue is 1.0 and black 0.0. alpha right? Or not? Bottom mask has to be all blue right?
+0 doesn't work for sample sigma or bilateral 0.
 Morph clean up duplicated code
 Reverse line on Contrast/Saturation to preserve alpha
 Scaling : choose better sigma

@@ -52,7 +52,8 @@ static char options[] =
 	"  -sampling <int:method (0=point,1=linear,2=Gaussian)>\n"
 	"  -saturation <real:factor>\n"
 	"  -scale <real:sx> <real:sy>\n"
-	"  -sharpen \n";
+	"  -sharpen \n"
+	"  -sobel \n";
 
 
 static void 
@@ -314,7 +315,9 @@ int
 
 		//Additional features 
 		//To use, copy the else-if clause below and modify it to your needs
-		else if (!strcmp(*argv, "-anything")) {
+		else if (!strcmp(*argv, "-sobel")) {
+			image->Sobel();
+			argv++, argc--;
 			//CheckOption(*argv, argc, N); //<-- checks that the number of arguments for the option is correct
 			//Your commanf line arguments paring and method call goes here
 			//argv += N; argc -= N; //<-- advance the command line arguments pointer and counter 

@@ -72,6 +72,7 @@ class R2Image {
   void Blur(double sigma);
   void Sharpen(void);
   void EdgeDetect(void);
+  void Sobel(void);
 
   // Non-linear filtering operations
   void MedianFilter(double sigma);
