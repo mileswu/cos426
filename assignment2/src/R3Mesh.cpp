@@ -203,8 +203,9 @@ Inflate(double factor)
   // can be negative, which means that the vertex should
   // move in the direction opposite to the normal vector.
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "Inflate(%g) not implemented\n", factor);
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		vertices[i]->position.Translate(vertices[i]->normal*vertices[i]->AverageEdgeLength()*factor);
+	}
 
   // Update mesh data structures
   Update();
