@@ -238,9 +238,30 @@ Smooth(void)
   // (with weights determined by a Gaussian with sigma equal to
   // the average length of edges attached to the vertex, 
   // normalized such that the weights sum to one).
+	
+	vector <R3Point> pointsToUpdate(vertices.size());
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		R3MeshVertex *v = vertices[i];
+		double norm = 1;
+		double sigma = v->AverageEdgeLength();
+		R3Point p1 = v->position;
+		R3Point p = v->position;
+		for(unsigned int j=0; j < v->edges_vertex_ids.size(); j++) {
+			R3Point p2 = vertices[v->edges_vertex_ids[j]]->position;
+			double dist = R3Distance(p1, p2);
+			double g = exp(-dist*dist/2.0/sigma/sigma);
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "Smooth not implemented\n");
+			p += g*vertices[v->edges_vertex_ids[j]]->position;
+			norm += g;
+		}
+		p /= norm;
+		pointsToUpdate[i] = p;
+	}
+
+	// Actually do update
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		vertices[i]->position = pointsToUpdate[i];
+	}
 
   // Update mesh data structures
   Update();
