@@ -5,6 +5,7 @@
 // Include files
 
 #include "R3Mesh.h"
+#include <iostream>
 
 
 
@@ -753,11 +754,55 @@ Update(void)
   // Update everything
   UpdateBBox();
   UpdateFacePlanes();
+	UpdateVertexEdges();
+	UpdateVertexFaces();
   UpdateVertexNormals();
   UpdateVertexCurvatures();
 }
 
+void R3Mesh::
+UpdateVertexEdges(void)
+{
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		vertices[i]->edges.clear();
+		vertices[i]->edges_vertex_ids.clear();
+	}
+	for(unsigned int i=0; i<faces.size(); i++) {
+		R3MeshFace *face = faces[i];
 
+		// Check number of vertices
+		if (face->vertices.size() < 2) continue;
+
+		// Cycle across edges of this face
+		R3MeshVertex *v1 = face->vertices.back();
+		for (unsigned int i = 0; i < face->vertices.size(); i++) {
+			R3MeshVertex *v2 = face->vertices[i];
+			R3Vector v = v2->position - v1->position;
+			
+			v1->AddEdge(v, v2->id);
+			v2->AddEdge(-v, v1->id);
+
+			v1 = v2;
+		}
+	}
+}
+
+void R3Mesh::
+UpdateVertexFaces(void)
+{
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		vertices[i]->faces.clear();
+	}
+	for(unsigned int i=0; i<faces.size(); i++) {
+		R3MeshFace *face = faces[i];
+
+		// Cycle across vertices of this face
+		for (unsigned int i = 0; i < face->vertices.size(); i++) {
+			R3MeshVertex *v = face->vertices[i];
+			v->faces.push_back(face);
+		}
+	}
+}
 
 void R3Mesh::
 UpdateBBox(void)
@@ -1245,7 +1290,23 @@ R3MeshVertex(const R3MeshVertex& vertex)
 {
 }
 
+void R3MeshVertex::
+AddEdge(const R3Vector& v, int vertex_id)
+{
+	// Check to see if this edge has been added already
+	int match = 0;
+	for(unsigned int i=0; i<edges_vertex_ids.size(); i++) {
+		if(edges_vertex_ids[i] == vertex_id) {
+			match = 1;
+			break;
+		}
+	}
+	if(match == 1) return;
 
+	// Add edge
+	edges_vertex_ids.push_back(vertex_id);
+	edges.push_back(v);
+}
 
 
 R3MeshVertex::
@@ -1268,11 +1329,14 @@ AverageEdgeLength(void) const
   // This feature should be implemented first.  To do it, you must
   // design a data structure that allows O(K) access to edges attached
   // to each vertex, where K is the number of edges attached to the vertex.
+	
+	double sum = 0;
+	for(unsigned int i=0; i<edges.size(); i++) {
+		sum += sqrt(edges[i].Dot(edges[i]));
+	}
+	sum /= (double) edges.size();
 
-  // FILL IN IMPLEMENTATION HERE  (THIS IS REQUIRED)
-  // BY REPLACING THIS ARBITRARY RETURN VALUE
-  fprintf(stderr, "Average vertex edge length not implemented\n");
-  return 0.12345;
+	return(sum);
 }
 
 
@@ -1289,9 +1353,15 @@ UpdateNormal(void)
   // where the weights are determined by the areas of the faces.
   // Store the resulting normal in the "normal"  variable associated with the vertex. 
   // You can display the computed normals by hitting the 'N' key in meshview.
-
-  // FILL IN IMPLEMENTATION HERE (THIS IS REQUIRED)
-  // fprintf(stderr, "Update vertex normal not implemented\n");
+	
+	R3Vector sum(0,0,0);
+	double norm=0;
+	for(unsigned int i=0; i<faces.size(); i++) {
+		sum += faces[i]->Area() * faces[i]->plane.Normal();
+		norm += faces[i]->Area();
+	}
+	sum /= norm;
+	normal = sum;
 }
 
 
