@@ -281,8 +281,29 @@ Sharpen(void)
   // This filter moves vertices by the vector exactly opposite from 
   // the one used for Smooth().
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "Sharpen not implemented\n");
+	vector <R3Vector> translation(vertices.size());
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		R3MeshVertex *v = vertices[i];
+		double norm = 1;
+		double sigma = v->AverageEdgeLength();
+		R3Point p1 = v->position;
+		R3Point p = v->position;
+		for(unsigned int j=0; j < v->edges_vertex_ids.size(); j++) {
+			R3Point p2 = vertices[v->edges_vertex_ids[j]]->position;
+			double dist = R3Distance(p1, p2);
+			double g = exp(-dist*dist/2.0/sigma/sigma);
+
+			p += g*vertices[v->edges_vertex_ids[j]]->position;
+			norm += g;
+		}
+		p /= norm;
+		translation[i] = p1 - p;
+	}
+
+	// Actually do update
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		vertices[i]->position.Translate(translation[i]);
+	}
 
   // Update mesh data structures
   Update();
