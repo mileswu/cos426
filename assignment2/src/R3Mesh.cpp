@@ -169,9 +169,22 @@ RandomNoise(double factor)
   // vertex to determine its maximum displacement
   // (i.e., displacement distances should be between 
   // 0 and "factor * vertex->AverageEdgeLength()"
+	
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		//this is to get a truly random x,y,z vector within space. Scaling a unit random vector
+		//DOES NOT GET YOU A UNIFORM RANDOM VECTOR
+		double x,y,z;
+		double d = factor*vertices[i]->AverageEdgeLength();
+		for(;;) {
+			x = d*((double)rand())/((double)RAND_MAX);
+			y = d*((double)rand())/((double)RAND_MAX);
+			z = d*((double)rand())/((double)RAND_MAX);
+			if(x*x + y*y + z*z < d*d) break;
+		}
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "RandomNoise(%g) not implemented\n", factor);
+		R3Vector noise(x,y,z);
+		vertices[i]->position.Translate(noise);
+	}
 
   // Update mesh data structures
   Update();
@@ -1355,12 +1368,10 @@ UpdateNormal(void)
   // You can display the computed normals by hitting the 'N' key in meshview.
 	
 	R3Vector sum(0,0,0);
-	double norm=0;
 	for(unsigned int i=0; i<faces.size(); i++) {
 		sum += faces[i]->Area() * faces[i]->plane.Normal();
-		norm += faces[i]->Area();
 	}
-	sum /= norm;
+	sum.Normalize();
 	normal = sum;
 }
 
