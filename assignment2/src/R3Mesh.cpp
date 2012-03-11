@@ -6,6 +6,7 @@
 
 #include "R3Mesh.h"
 #include <iostream>
+#include <map>
 
 
 
@@ -471,13 +472,27 @@ SplitFaces(void)
   // with the new vertices associated with its adjacent edges.
 	
 	vector<R3MeshFace *> facestodel(faces);
+	map< pair <R3MeshVertex*, R3MeshVertex*>, R3MeshVertex *> midpoints;
 
 	for(unsigned int i=0; i<facestodel.size(); i++) {
 		R3MeshFace *f = facestodel[i];
 		vector<R3MeshVertex *> newvertexs;
 		for(unsigned int j=0; j<f->vertices.size(); j++) {
-			R3Point midpoint = 0.5*(f->vertices[j]->position + f->vertices[(j+1)%f->vertices.size()]->position);
-			R3MeshVertex *v = CreateVertex(midpoint, R3zero_vector, R2zero_point);
+			R3MeshVertex *v1 = f->vertices[j];
+			R3MeshVertex *v2 = f->vertices[(j+1)%f->vertices.size()];
+
+			R3MeshVertex *v;
+			if(midpoints.count(make_pair(v1, v2)) == 1) {
+				v = midpoints[make_pair(v1,v2)];
+			}
+			if(midpoints.count(make_pair(v2, v1)) == 1) {
+				v = midpoints[make_pair(v2,v1)];
+			} else {
+				R3Point midpoint = 0.5*(v1->position + v2->position);
+				v = CreateVertex(midpoint, R3zero_vector, R2zero_point);
+				midpoints[make_pair(v1,v2)] = v;
+			}
+
 			newvertexs.push_back(v);
 		}
 		for(unsigned int j=0; j<f->vertices.size(); j++) {
@@ -638,8 +653,34 @@ SubdivideLoop(void)
   // Then, update the positions of all vertices according to the Loop subdivision weights.  
   // This only must work correctly for meshes with triangular faces.
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "SubdivideLooop not implemented\n");
+	vector<R3MeshVertex *> evenvertices(vertices);
+
+	SplitFaces();
+	
+	vector<R3Point> positionstoupdate(vertices.size());
+	
+	for(unsigned int i=0; i<positionstoupdate.size(); i++) {
+		R3MeshVertex *v = vertices[i];
+		cout << v->edges.size() << endl;
+		/*assert(v->edges.size() == 6); //check triangle
+
+		int iseven = count(evenvertices.begin(), evenvertices.end(), v); 
+		if(iseven == 1) {
+			R3Point p = v->position * 10.0/16.0;
+			for(unsigned int j=0; j<6; j++) {
+				p += (v->position + v->edges[j]*2)/16.0;
+			}
+			positionstoupdate[i] = p;
+		}
+		else {
+			positionstoupdate[i] = v->position;
+		}*/
+
+	}
+
+
+	for(unsigned int i=0; i<positionstoupdate.size(); i++)
+		vertices[i]->position = positionstoupdate[i];
 
   // Update mesh data structures
   Update();
