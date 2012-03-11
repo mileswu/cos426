@@ -338,9 +338,100 @@ Truncate(double t)
   // and whose apex is the original vertex, creating a new N-sided 
   // face covering the hole.  It is OK to assume that the input shape 
   // is convex for this feature.
+	for(int i=0; i<faces.size(); i++) {
+		cout << "face  " << i << " size " << faces[i]->vertices.size() << endl;
+		for(int j=0; j<faces[i]->vertices.size(); j++) {
+			cout << faces[i]->vertices[j]->id << endl;
+		}
+	}
+	
+	vector <R3MeshVertex *> listofvertices;
+	for(unsigned int i=0; i<vertices.size(); i++) {
+		listofvertices.push_back(vertices[i]);
+	}
+	
+	for(unsigned int i=0; i<listofvertices.size(); i++) {
+		R3MeshVertex *v = listofvertices[i];
+		vector <R3MeshVertex *> newvertices;
+		for(unsigned int j=0; j < v->edges.size(); j++) {
+			R3Point p = v->position + t*v->edges[j];
+			R3MeshVertex *adjacent_v = listofvertices[v->edges_vertex_ids[j]];
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "Truncate(%g) not implemented\n", t);
+			R3MeshVertex *new_v = CreateVertex(p, R3zero_vector, R2zero_point);
+			newvertices.push_back(new_v);
+
+			for(unsigned int k=0; k < v->faces.size(); k++) {
+				R3MeshFace *f = faces[k];
+				int location_adj=-1, location_cur=-1;
+				for(unsigned int l=0; l < f->vertices.size(); l++) {
+					if(adjacent_v == f->vertices[l]) {
+						location_adj = l;
+						break;
+					}
+				}
+				for(unsigned int l=0; l < f->vertices.size(); l++) {
+					if(v == f->vertices[l]) {
+						location_cur = l;
+						break;
+					}
+				}
+				if(location_adj == -1 || location_cur == -1) continue;
+
+				cout << "cur: " << v->id << " at " << location_cur << " and adj: " << adjacent_v->id << " at " << location_adj << endl;
+
+				if((location_adj == f->vertices.size() - 1 && location_cur == 0) || (location_adj == 0 && location_cur == f->vertices.size() - 1)) { //loop around
+					f->vertices.insert(f->vertices.begin() + location_adj + 1, 1, new_v);
+				}
+				else if(abs(location_adj - location_cur) <= 2) { //adjacent (with one extra for new point)
+					if(location_cur > location_adj)
+						f->vertices.insert(f->vertices.begin() + location_cur, 1, new_v);
+					else
+						f->vertices.insert(f->vertices.begin() + location_cur+1, 1, new_v);
+				}
+				else { //adjacent 2... must be loop around
+					f->vertices.insert(f->vertices.begin() + location_cur, 1, new_v);
+					cout << "fuck me" << endl;
+				}
+				/*int has_adjacent_v=0;
+				has_adjacent_v = count(f->vertices.begin(), f->vertices.end(), adjacent_v);
+				cout << "adjacent: " << has_adjacent_v << endl;
+
+				if(adjacent_v != 0) {
+					f->vertices.push_back(new_v);
+				}*/
+			}
+		}
+		CreateFace(newvertices);
+		if(i == 1) break;
+	}
+	for(unsigned int i=0; i<listofvertices.size(); i++) {
+		R3MeshVertex *v = listofvertices[i];
+		for(unsigned int k=0; k < v->faces.size(); k++) {
+			vector<R3MeshVertex *>::iterator begin, end;
+			cout << "Currently has " << v->faces[k]->vertices.size() << endl;
+			end = remove(v->faces[k]->vertices.begin(), v->faces[k]->vertices.end(), v);
+			begin = v->faces[k]->vertices.begin();
+			v->faces[k]->vertices.resize(distance(begin, end));
+			cout << "Now has " << v->faces[k]->vertices.size() << endl;
+
+			/*cout << "face for vertex " << v->id << ":";
+			for(unsigned int l=0; l<v->faces[k]->vertices.size(); l++)
+				cout << v->faces[k]->vertices[l]->id << " ";
+			cout << endl;*/
+		}
+		//DeleteVertex(v);
+		if(i == 1) break;
+	}
+	for(int i=0; i<vertices.size(); i++) {
+		cout << "vertex id: " << vertices[i]->id << endl;
+	}
+	for(int i=0; i<faces.size(); i++) {
+		cout << "face  " << i << " size " << faces[i]->vertices.size() << endl;
+		for(int j=0; j<faces[i]->vertices.size(); j++) {
+			cout << faces[i]->vertices[j]->id << endl;
+		}
+	}
+
 
   // Update mesh data structures
   Update();
@@ -378,9 +469,35 @@ SplitFaces(void)
   // remove the original face, create a new face connnecting all the new vertices,
   // and create new triangular faces connecting each vertex of the original face
   // with the new vertices associated with its adjacent edges.
+	
+	vector<R3MeshFace *> facestodel(faces);
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "SplitFaces not implemented\n");
+	for(unsigned int i=0; i<facestodel.size(); i++) {
+		R3MeshFace *f = facestodel[i];
+		vector<R3MeshVertex *> newvertexs;
+		for(unsigned int j=0; j<f->vertices.size(); j++) {
+			R3Point midpoint = 0.5*(f->vertices[j]->position + f->vertices[(j+1)%f->vertices.size()]->position);
+			R3MeshVertex *v = CreateVertex(midpoint, R3zero_vector, R2zero_point);
+			newvertexs.push_back(v);
+		}
+		for(unsigned int j=0; j<f->vertices.size(); j++) {
+			vector<R3MeshVertex *> temp;
+			temp.push_back(f->vertices[j]);
+			temp.push_back(newvertexs[j]);
+			if(j == 0) 
+				temp.push_back(newvertexs[newvertexs.size()-1]);
+			else
+				temp.push_back(newvertexs[j-1]);
+			CreateFace(temp);
+		}
+
+		CreateFace(newvertexs);
+	}
+
+	for(unsigned int i=0; i<facestodel.size(); i++) {
+		R3MeshFace *f = facestodel[i];
+		DeleteFace(f);
+	}
 
   // Update mesh data structures
   Update();
