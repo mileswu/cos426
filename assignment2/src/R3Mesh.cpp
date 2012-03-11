@@ -742,9 +742,49 @@ SurfaceOfRevolution(const R3Mesh& profile_curve,
   // should be created by successively rotating the original vertices around 
   // the axis by the step size and new faces should be constructed by 
   // connecting adjacent vertices to create a surface of revolution.
+	
+	vector<R3MeshVertex *> delvertices(vertices);
+	for(unsigned int i=0; i<delvertices.size(); i++)
+		DeleteVertex(delvertices[i]);
+	vector<R3MeshFace *> delfaces(faces);
+	for(unsigned int i=0; i<delfaces.size(); i++)
+		DeleteFace(delfaces[i]);
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "SurfaceOfRevolution not implemented\n");
+	vector<R3MeshVertex *> prev(profile_curve.vertices.size());
+	vector<R3MeshVertex *> cur(profile_curve.vertices.size());
+	vector<R3MeshVertex *> first(profile_curve.vertices.size());
+	int firstbool = 1;
+	for(double angle=0; angle<2*M_PI; angle += rotation_angle_step) {
+		prev = cur;
+		for(unsigned int i=0; i<profile_curve.vertices.size(); i++) {
+			R3Point p = profile_curve.vertices[i]->position;
+			p.Rotate(axis_of_revolution, angle);
+			R3MeshVertex *v = CreateVertex(p, R3zero_vector, R2zero_point);
+			cur[i] = v;
+		}
+		if(firstbool == 1) {
+			firstbool = 0;
+			first = cur;
+		} else {
+			for(unsigned int i=0; i<profile_curve.vertices.size()-1; i++) {
+				vector<R3MeshVertex *> facev;
+				facev.push_back(prev[i]);
+				facev.push_back(cur[i]);
+				facev.push_back(cur[i+1]);
+				facev.push_back(prev[i+1]);
+				CreateFace(facev);
+			}
+		}
+	}
+	for(unsigned int i=0; i<profile_curve.vertices.size()-1; i++) {
+		vector<R3MeshVertex *> facev;
+		facev.push_back(cur[i]);
+		facev.push_back(first[i]);
+		facev.push_back(first[i+1]);
+		facev.push_back(cur[i+1]);
+		CreateFace(facev);
+	}
+	
 
   // Update mesh data structures
   Update();
