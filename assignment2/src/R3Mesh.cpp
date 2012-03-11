@@ -339,100 +339,76 @@ Truncate(double t)
   // and whose apex is the original vertex, creating a new N-sided 
   // face covering the hole.  It is OK to assume that the input shape 
   // is convex for this feature.
-	for(int i=0; i<faces.size(); i++) {
-		cout << "face  " << i << " size " << faces[i]->vertices.size() << endl;
-		for(int j=0; j<faces[i]->vertices.size(); j++) {
-			cout << faces[i]->vertices[j]->id << endl;
-		}
-	}
 	
-	vector <R3MeshVertex *> listofvertices;
-	for(unsigned int i=0; i<vertices.size(); i++) {
-		listofvertices.push_back(vertices[i]);
-	}
+	vector <R3MeshVertex *> originalvertices(vertices);
+	vector <R3MeshFace *> originalfaces(faces);
+	map< pair<R3MeshVertex*, R3MeshVertex *>, R3MeshVertex *> newvertices;
+	map< pair<R3MeshFace *, R3MeshVertex *>, pair<R3MeshVertex *, R3MeshVertex *> > mapping;
+
 	
-	for(unsigned int i=0; i<listofvertices.size(); i++) {
-		R3MeshVertex *v = listofvertices[i];
-		vector <R3MeshVertex *> newvertices;
+	for(unsigned int i=0; i<originalvertices.size(); i++) {
+		R3MeshVertex *v = originalvertices[i];
+
+		vector <R3MeshVertex *> corners;
+		vector < pair <R3MeshVertex *, R3MeshVertex *> > corner_pairs;
 		for(unsigned int j=0; j < v->edges.size(); j++) {
+			R3MeshVertex *v_adj = vertices[v->edges_vertex_ids[j]];
 			R3Point p = v->position + t*v->edges[j];
-			R3MeshVertex *adjacent_v = listofvertices[v->edges_vertex_ids[j]];
+			R3MeshVertex *newvertex = CreateVertex(p, R3zero_vector, R2zero_point);
 
-			R3MeshVertex *new_v = CreateVertex(p, R3zero_vector, R2zero_point);
-			newvertices.push_back(new_v);
+			newvertices[make_pair(v, v_adj)] = newvertex;
+		}
 
-			for(unsigned int k=0; k < v->faces.size(); k++) {
-				R3MeshFace *f = faces[k];
-				int location_adj=-1, location_cur=-1;
-				for(unsigned int l=0; l < f->vertices.size(); l++) {
-					if(adjacent_v == f->vertices[l]) {
-						location_adj = l;
+		for(unsigned int j=0; j < v->faces.size(); j++) {
+			// Mapping for new faces
+			R3MeshFace *f = v->faces[j];
+			vector<R3MeshVertex *>::iterator pos_iterator;
+			pos_iterator = find(f->vertices.begin(), f->vertices.end(), v);
+			int pos = distance(f->vertices.begin(), pos_iterator);
+
+			R3MeshVertex *before = f->vertices[pos == 0 ? f->vertices.size() - 1 : pos - 1];
+			R3MeshVertex *after = f->vertices[pos == f->vertices.size() - 1 ? 0 : pos + 1];
+			
+			R3MeshVertex *vbefore = newvertices[make_pair(v, before)];
+			R3MeshVertex *vafter = newvertices[make_pair(v, after)];
+
+			mapping[make_pair(f, v)] = make_pair(vbefore, vafter);
+			corner_pairs.push_back(make_pair(vbefore, vafter));
+		}
+
+		//Make endcap
+		for(unsigned int j=0; j<corner_pairs.size(); j++) {
+			if(j==0) {
+				corners.push_back(corner_pairs[0].first);
+				corners.push_back(corner_pairs[0].second);
+			}
+			else {
+				for(unsigned int k=0; k<corner_pairs.size(); k++) {
+					if(corner_pairs[k].first == corners[corners.size()-1]) {
+						corners.push_back(corner_pairs[k].second);
 						break;
 					}
 				}
-				for(unsigned int l=0; l < f->vertices.size(); l++) {
-					if(v == f->vertices[l]) {
-						location_cur = l;
-						break;
-					}
-				}
-				if(location_adj == -1 || location_cur == -1) continue;
-
-				cout << "cur: " << v->id << " at " << location_cur << " and adj: " << adjacent_v->id << " at " << location_adj << endl;
-
-				if((location_adj == f->vertices.size() - 1 && location_cur == 0) || (location_adj == 0 && location_cur == f->vertices.size() - 1)) { //loop around
-					f->vertices.insert(f->vertices.begin() + location_adj + 1, 1, new_v);
-				}
-				else if(abs(location_adj - location_cur) <= 2) { //adjacent (with one extra for new point)
-					if(location_cur > location_adj)
-						f->vertices.insert(f->vertices.begin() + location_cur, 1, new_v);
-					else
-						f->vertices.insert(f->vertices.begin() + location_cur+1, 1, new_v);
-				}
-				else { //adjacent 2... must be loop around
-					f->vertices.insert(f->vertices.begin() + location_cur, 1, new_v);
-					cout << "fuck me" << endl;
-				}
-				/*int has_adjacent_v=0;
-				has_adjacent_v = count(f->vertices.begin(), f->vertices.end(), adjacent_v);
-				cout << "adjacent: " << has_adjacent_v << endl;
-
-				if(adjacent_v != 0) {
-					f->vertices.push_back(new_v);
-				}*/
 			}
 		}
-		CreateFace(newvertices);
-		if(i == 1) break;
-	}
-	for(unsigned int i=0; i<listofvertices.size(); i++) {
-		R3MeshVertex *v = listofvertices[i];
-		for(unsigned int k=0; k < v->faces.size(); k++) {
-			vector<R3MeshVertex *>::iterator begin, end;
-			cout << "Currently has " << v->faces[k]->vertices.size() << endl;
-			end = remove(v->faces[k]->vertices.begin(), v->faces[k]->vertices.end(), v);
-			begin = v->faces[k]->vertices.begin();
-			v->faces[k]->vertices.resize(distance(begin, end));
-			cout << "Now has " << v->faces[k]->vertices.size() << endl;
-
-			/*cout << "face for vertex " << v->id << ":";
-			for(unsigned int l=0; l<v->faces[k]->vertices.size(); l++)
-				cout << v->faces[k]->vertices[l]->id << " ";
-			cout << endl;*/
-		}
-		//DeleteVertex(v);
-		if(i == 1) break;
-	}
-	for(int i=0; i<vertices.size(); i++) {
-		cout << "vertex id: " << vertices[i]->id << endl;
-	}
-	for(int i=0; i<faces.size(); i++) {
-		cout << "face  " << i << " size " << faces[i]->vertices.size() << endl;
-		for(int j=0; j<faces[i]->vertices.size(); j++) {
-			cout << faces[i]->vertices[j]->id << endl;
-		}
+		CreateFace(corners);
 	}
 
+	for(unsigned int i=0; i<originalfaces.size(); i++) {
+		R3MeshFace *f = originalfaces[i];
+		vector <R3MeshVertex *> newverticesforface;
+		for(unsigned int j=0; j<f->vertices.size(); j++) {
+			pair<R3MeshVertex *, R3MeshVertex *> p = mapping[make_pair(f, f->vertices[j])];
+			newverticesforface.push_back(p.first);
+			newverticesforface.push_back(p.second);
+		}
+		CreateFace(newverticesforface);
+	}
+
+	for(unsigned int i=0; i<originalvertices.size(); i++)
+		DeleteVertex(originalvertices[i]);
+	for(unsigned int i=0; i<originalfaces.size(); i++)
+		DeleteFace(originalfaces[i]);
 
   // Update mesh data structures
   Update();
