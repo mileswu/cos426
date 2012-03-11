@@ -661,20 +661,45 @@ SubdivideLoop(void)
 	
 	for(unsigned int i=0; i<positionstoupdate.size(); i++) {
 		R3MeshVertex *v = vertices[i];
-		cout << v->edges.size() << endl;
-		/*assert(v->edges.size() == 6); //check triangle
 
 		int iseven = count(evenvertices.begin(), evenvertices.end(), v); 
-		if(iseven == 1) {
+		if(iseven == 1) { //Even
 			R3Point p = v->position * 10.0/16.0;
-			for(unsigned int j=0; j<6; j++) {
+			for(unsigned int j=0; j<v->edges.size(); j++) { //this should be 6
 				p += (v->position + v->edges[j]*2)/16.0;
 			}
 			positionstoupdate[i] = p;
 		}
-		else {
-			positionstoupdate[i] = v->position;
-		}*/
+		else { //Odd
+			R3Point p(0,0,0);
+			vector <R3MeshVertex *>exclusion; //To prevent duplication
+			exclusion.push_back(v);
+
+			//Recursing one deep to get adjacent
+			for(unsigned int j=0; j<v->edges_vertex_ids.size(); j++) {
+				R3MeshVertex *firstlevel = vertices[v->edges_vertex_ids[j]];
+				if(count(evenvertices.begin(), evenvertices.end(), firstlevel) == 1) { //Even
+					p += 3.0/8.0 * firstlevel->position;
+					exclusion.push_back(firstlevel);
+				}
+			}
+
+			//Recursing two deep
+			for(unsigned int j=0; j<v->edges_vertex_ids.size(); j++) {
+				R3MeshVertex *firstlevel = vertices[v->edges_vertex_ids[j]];
+				if(count(evenvertices.begin(), evenvertices.end(), firstlevel) == 0) { //Odd
+					for(unsigned int k=0; k<firstlevel->edges_vertex_ids.size(); k++) {
+						R3MeshVertex *secondlevel = vertices[firstlevel->edges_vertex_ids[k]];
+						if(count(evenvertices.begin(), evenvertices.end(), secondlevel) == 1 && count(exclusion.begin(), exclusion.end(), secondlevel) == 0) { //Even and not excluded
+							p += 1.0/8.0 * secondlevel->position;
+							exclusion.push_back(secondlevel);
+						}
+					}
+				}
+			}
+
+			positionstoupdate[i] = p;
+		}
 
 	}
 
