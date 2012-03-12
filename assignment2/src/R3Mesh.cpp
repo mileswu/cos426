@@ -702,16 +702,28 @@ SubdivideLoop(void)
 
 		int iseven = count(evenvertices.begin(), evenvertices.end(), v); 
 		if(iseven == 1) { //Even
-			R3Point p = v->position * 10.0/16.0;
-			for(unsigned int j=0; j<v->edges.size(); j++) { //this should be 6
-				p += (v->position + v->edges[j]*2)/16.0;
+			R3Point p(0,0,0);
+			double weight, sum=0;
+			if(v->edges.size() == 2) {
+				weight = 1.0/8.0;
+			} else if(v->edges.size() == 3) {
+				weight = 3.0/16.0;
 			}
+			else {
+				weight = 3.0/8.0/((double)v->edges.size());
+			}
+			for(unsigned int j=0; j<v->edges.size(); j++) { //this should be 6
+				p += (v->position + v->edges[j]*2) * weight;
+				sum += weight;
+			}
+			p += v->position * (1.0-sum);
+			
 			positionstoupdate[i] = p;
 		}
 		else { //Odd
 			R3Point p(0,0,0);
 			vector <R3MeshVertex *>exclusion; //To prevent duplication
-			exclusion.push_back(v);
+			//exclusion.push_back(v);
 
 			//Recursing one deep to get adjacent
 			for(unsigned int j=0; j<v->edges_vertex_ids.size(); j++) {
@@ -734,6 +746,13 @@ SubdivideLoop(void)
 						}
 					}
 				}
+			}
+
+			//If there was no two deep found, then we are edge. 
+			if(exclusion.size() < 4) {
+				p = R3zero_point;
+				p += 0.5 * exclusion[0]->position;
+				p += 0.5 * exclusion[1]->position;
 			}
 
 			positionstoupdate[i] = p;
