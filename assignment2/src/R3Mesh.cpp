@@ -507,9 +507,33 @@ StarFaces(double factor)
   // Position the new vertex at a point that is offset from the centroid
   // of the face along the normal vector by a distance equal to factor 
   // times the average edge length for the face.
+	
+	vector <R3MeshFace *>originalfaces(faces);
+	for(unsigned int i=0; i<originalfaces.size(); i++) {
+		R3MeshFace *f = originalfaces[i];
+		R3Point centroid(0,0,0);
+		for(unsigned int j=0; j<f->vertices.size(); j++) {
+			centroid += f->vertices[j]->position;
+		}
+		centroid /= f->vertices.size();
+	
+		R3Point p = centroid + factor * f->AverageEdgeLength() *f->plane.Normal();
+		
+		R3MeshVertex *v = CreateVertex(p, R3zero_vector, R2zero_point);
 
-  // FILL IN IMPLEMENTATION HERE
-  fprintf(stderr, "StarFaces(%g) not implemented\n", factor);
+		for(unsigned int j=0; j<f->vertices.size(); j++) {
+			vector <R3MeshVertex *> facevs;
+			facevs.push_back(v);
+			facevs.push_back(f->vertices[j]);
+			facevs.push_back(f->vertices[j+1 == f->vertices.size() ? 0 : j+1]);
+			CreateFace(facevs);
+		}
+
+
+	}
+
+	for(int i=0; i<originalfaces.size(); i++)
+		DeleteFace(originalfaces[i]);
 
   // Update mesh data structures
   Update();
