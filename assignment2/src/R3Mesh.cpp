@@ -176,6 +176,7 @@ RandomNoise(double factor)
 		//DOES NOT GET YOU A UNIFORM RANDOM VECTOR
 		double x,y,z;
 		double d = factor*vertices[i]->AverageEdgeLength();
+    if(d == 0) continue;
 		for(;;) {
 			x = d*((double)rand())/((double)RAND_MAX);
 			y = d*((double)rand())/((double)RAND_MAX);
@@ -364,7 +365,7 @@ Truncate(double t)
 			R3MeshFace *f = v->faces[j];
 			vector<R3MeshVertex *>::iterator pos_iterator;
 			pos_iterator = find(f->vertices.begin(), f->vertices.end(), v);
-			int pos = distance(f->vertices.begin(), pos_iterator);
+			unsigned int pos = distance(f->vertices.begin(), pos_iterator);
 
 			R3MeshVertex *before = f->vertices[pos == 0 ? f->vertices.size() - 1 : pos - 1];
 			R3MeshVertex *after = f->vertices[pos == f->vertices.size() - 1 ? 0 : pos + 1];
@@ -532,7 +533,7 @@ StarFaces(double factor)
 
 	}
 
-	for(int i=0; i<originalfaces.size(); i++)
+	for(unsigned int i=0; i<originalfaces.size(); i++)
 		DeleteFace(originalfaces[i]);
 
   // Update mesh data structures
@@ -1670,7 +1671,8 @@ AverageEdgeLength(void) const
 	for(unsigned int i=0; i<edges.size(); i++) {
 		sum += sqrt(edges[i].Dot(edges[i]));
 	}
-	sum /= (double) edges.size();
+	if(edges.size() != 0)
+	  sum /= (double) edges.size();
 
 	return(sum);
 }

@@ -1090,7 +1090,7 @@ WriteJPEG(const char *filename) const
   cinfo.dct_method = JDCT_ISLOW;
   jpeg_set_defaults(&cinfo);
   cinfo.optimize_coding = TRUE;
-  jpeg_set_quality(&cinfo, 75, TRUE);
+  jpeg_set_quality(&cinfo, 100, TRUE);
   jpeg_start_compress(&cinfo, TRUE);
 	
   // Allocate unsigned char buffer for reading image

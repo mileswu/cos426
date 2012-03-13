@@ -20,7 +20,7 @@ MESHVIEW_OBJS=$(MESHVIEW_SRCS:.cpp=.o)
 #
 
 CXX=g++
-CXXFLAGS=-Wall -I. -g -DUSE_JPEG
+CXXFLAGS=-Wall -I. -g -DUSE_JPEG -O2
 
 
 #
