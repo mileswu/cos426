@@ -3,11 +3,12 @@
 <TITLE>
 COS 426 Assignment 2
 </TITLE>
+</HEAD>
 <BODY>
 <CENTER>
 <H2>
-COS 426, Spring 2011<BR>
-NAME, LOGIN<BR>           <!-- Fill in your name and login -->
+COS 426, Spring 2012<BR>
+Miles Wu, mawu<BR>           <!-- Fill in your name and login -->
 </H2>                     
 </CENTER>
 <HR><BR>
@@ -19,10 +20,20 @@ NAME, LOGIN<BR>           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-I believe that I have implemented the following features, which are worth a total of xxx points:
+I believe that I have implemented the following features, which are worth a total of 22.5 points:
 <UL>
+  <LI>(1) <A href="#edges">Average Edge Lengths</A></LI>
+  <LI>(1) <A href="#normals">Per-vertex Normals</A></LI>
   <LI>(1) <A href="#randomnoise">Random Noise</A></LI>
-  <LI>(1) <A href="#randomnoise">Movie (random noise)</A></LI>
+  <LI>(1/2) <A href="#inflate">Inflate</A></LI>
+  <LI>(2) <A href="#smooth">Smooth</A></LI>
+  <LI>(1) <A href="#sharpen">Sharpen</A></LI>
+  <LI>(3) <A href="#truncate">Truncate</A></LI>
+  <LI>(2) <A href="#splitfaces">Split Faces</A></LI>
+  <LI>(2) <A href="#starfaces">Star Faces</A></LI>
+  <LI>(3+1) <A href="#collapseedges">Collapse Edges</A></LI>
+  <LI>(2) <A href="#loop">Loop subdivision</A></LI>
+  <LI>(2) <A href="#surface">Surface of Revolution</A></LI>
   <LI>(1) <A href="#art">Art contest submission</A></LI>
 </UL>
 <HR><BR>
@@ -36,8 +47,12 @@ I believe that I have implemented the following features, which are worth a tota
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-<H3><A name='randomnoise'>Random Noise</A></H3>
-<PRE>meshpro input/meshname.off output/meshname_randomnoise_factor.off -noise factor</PRE>
+
+<H3><A name='edges'>Average Edge Lengths</A></H3>
+      <BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+<HR>
+	
+<H3><A name='normals'>Per-vertex Normals</A></H3>
 <TABLE cellSpacing=0 cellPadding=10 border=0>
 <TBODY>
   <TR>
@@ -58,22 +73,291 @@ I believe that I have implemented the following features, which are worth a tota
       0.4 
     </TD>
   </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+<HR>
+
+
+
+<H3><A name='randomnoise'>Random Noise</A></H3>
+<PRE>meshpro input/cow.off output/cow_noise_factor.off -noise factor</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
   <TR>
-    <TD vAlign=top align=middle colspan="5">
-      Comments about implementation, interesting features, problems, etc.<BR>
-      A movie of randomnoise varying between xxx and xxx is linked <A href="movies/meshname_randomnoise_movie.avi">here</A>.
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_noise_0.1.jpg"><IMG width=200 src="output/cow_noise_0.1.jpg"></A><BR>       
+       0.1 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_noise_0.4.jpg"><IMG width=200 src="output/cow_noise_0.4.jpg"></A><BR>       
+       0.4 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/cow_noise_0.8.jpg"><IMG width=200 src="output/cow_noise_0.8.jpg"></A><BR> 
+      0.8 
     </TD>
   </TR>
 </TBODY>
 </TABLE>
-<HR><BR>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
+
+<H3><A name='inflate'>Inflate</A></H3>
+<PRE>meshpro input/cow.off output/cow_inflate_factor.off -inflate factor</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_inflate_0.2.jpg"><IMG width=200 src="output/cow_inflate_0.2.jpg"></A><BR>       
+       0.2 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_inflate_0.8.jpg"><IMG width=200 src="output/cow_inflate_0.8.jpg"></A><BR>       
+       0.8 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/cow_inflate_1.6.jpg"><IMG width=200 src="output/cow_inflate_1.6.jpg"></A><BR> 
+      1.6
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
+	
+<H3><A name='smooth'>Smooth</A></H3>
+<PRE>meshpro input/cow.off output/cow_smooth.off -smooth</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_smooth_1.jpg"><IMG width=200 src="output/cow_smooth_1.jpg"></A><BR>       
+       Once
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_smooth_2.jpg"><IMG width=200 src="output/cow_smooth_2.jpg"></A><BR>       
+       Twice
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/cow_smooth_3.jpg"><IMG width=200 src="output/cow_smooth_3.jpg"></A><BR> 
+      Thrice
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
+
+<H3><A name='sharpen'>Sharpen</A></H3>
+<PRE>meshpro input/cow.off output/cow_sharpen.off -sharpen</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_sharpen_1.jpg"><IMG width=200 src="output/cow_sharpen_1.jpg"></A><BR>       
+       Once
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_sharpen_2.jpg"><IMG width=200 src="output/cow_sharpen_2.jpg"></A><BR>       
+       Twice
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/cow_sharpen_3.jpg"><IMG width=200 src="output/cow_sharpen_3.jpg"></A><BR> 
+      Thrice
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
+
+<H3><A name='truncate'>Truncate</A></H3>
+<PRE>meshpro input/ico.off output/ico_truncate_factor.off -truncate factor</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/ico.jpg"><IMG width=200 src="output/ico.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/ico_truncate_0.1.jpg"><IMG width=200 src="output/ico_truncate_0.1.jpg"></A><BR>       
+       0.1 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/ico_truncate_0.2.jpg"><IMG width=200 src="output/ico_truncate_0.2.jpg"></A><BR>       
+       0.2 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/ico_truncate_0.4.jpg"><IMG width=200 src="output/ico_truncate_0.4.jpg"></A><BR> 
+      0.4 
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
 
 
-<!------------------------------------------------------------------------> 
+<H3><A name='splitfaces'>Split faces</A></H3>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="input/meshname_randomnoise_0.0.jpg"><IMG width=200 src="output/meshname_randomnoise_0.0.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="input/meshname_randomnoise_0.1.jpg"><IMG width=200 src="output/meshname_randomnoise_0.1.jpg"></A><BR>       
+       0.1 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/meshname_randomnoise_0.2.jpg"><IMG width=200 src="output/meshname_randomnoise_0.2.jpg"></A><BR>       
+       0.2 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/meshname_randomnoise_0.4.jpg"><IMG width=200 src="output/meshname_randomnoise_0.4.jpg"></A><BR> 
+      0.4 
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+<HR>
 
-<!-- Add more features here -->
+<H3><A name='starfaces'>Star Faces</A></H3>
+<PRE>meshpro input/sphere.off output/sphere_star_factor.off -starfaces factor</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/sphere.jpg"><IMG width=200 src="output/sphere.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/sphere_star_0.1.jpg"><IMG width=200 src="output/sphere_star_0.1.jpg"></A><BR>       
+       0.1 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/sphere_star_0.2.jpg"><IMG width=200 src="output/sphere_star_0.2.jpg"></A><BR>       
+       0.2 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/sphere_star_0.4.jpg"><IMG width=200 src="output/sphere_star_0.4.jpg"></A><BR> 
+      0.4 
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
 
+<H3><A name='collapseedges'>Collapse Edges</A></H3>
+<PRE>meshpro input/cow.off output/cow_collapse_minedge.off -collapseshortedges minedge</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_collapse_0.01.jpg"><IMG width=200 src="output/cow_collapse_0.01.jpg"></A><BR>       
+       0.01 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_collapse_0.02.jpg"><IMG width=200 src="output/cow_collapse_0.02.jpg"></A><BR>       
+       0.02 
+    </TD>
+    <TD vAlign=top align=middle>
+      <A href="output/cow_collapse_0.04.jpg"><IMG width=200 src="output/cow_collapse_0.04.jpg"></A><BR> 
+      0.04 
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
 
+<H3><A name='loop'>Loop subdivision</A></H3>
+<PRE>meshpro input/cow.off output/cow_loop.off -loop</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/cow.jpg"><IMG width=200 src="output/cow.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cow_loop.jpg"><IMG width=200 src="output/cow_loop.jpg"></A><BR>       
+       Output
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cheetah.jpg"><IMG width=200 src="output/cheetah.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cheetah_loop.jpg"><IMG width=200 src="output/cheetah_loop.jpg"></A><BR>       
+       Output
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
+
+<H3><A name='surface'>Surface of Revolution</A></H3>
+<PRE>meshpro input/empty.off output/wineglass_surface_anglestep.off -revolution input/wineglass_curve.off 0 0 0 0 0 1 anglestep</PRE>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/sphere.jpg"><IMG width=200 src="output/sphere.jpg"></A><BR>       
+       Input 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/wineglass_surface_0.2.jpg"><IMG width=200 src="output/wineglass_surface_0.2.jpg"></A><BR>       
+       0.2 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/wineglass_surface_0.1.jpg"><IMG width=200 src="output/wineglass_surface_0.1.jpg"></A><BR>       
+       0.1 
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/wineglass_surface_0.01.jpg"><IMG width=200 src="output/wineglass_surface_0.01.jpg"></A><BR>       
+       0.01 
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<BR>
+<HR>
 
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
@@ -104,23 +388,23 @@ I believe that I have implemented the following features, which are worth a tota
 
 <DL>
   <DT>How long did you spend on this assignment?
-  <DD>Your answer goes here
+  <DD>10-15 hours
   <BR>&nbsp;<BR>
 
   <DT>Was it too hard, too easy, or just right?
-  <DD>Your answer goes here
+  <DD>About right.
   <BR>&nbsp;<BR>
 
   <DT>What was the best part of the assignment?
-  <DD>Your answer goes here
+  <DD>Seeing the cool shapes
   <BR>&nbsp;<BR>
 
   <DT>What was the worst part of the assignment?
-  <DD>Your answer goes here
+  <DD>Truncate: getting the order of vertices right for the face
   <BR>&nbsp;<BR>
 
   <DT>How could it be improved for next year?
-  <DD>Your answer goes here
+  <DD>Removing truncate
   <BR>&nbsp;<BR>
 
 </DL>
