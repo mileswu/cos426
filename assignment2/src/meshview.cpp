@@ -970,6 +970,9 @@ ParseArgs(int argc, char **argv)
       else if (!strcmp(*argv, "-exit_immediately")) { quit = 1; }
       else if (!strcmp(*argv, "-output_image")) { argc--; argv++; output_image_name = *argv; }
       else if (!strcmp(*argv, "-output_mesh")) { argc--; argv++; output_mesh_name = *argv; }
+      else if (!strcmp(*argv, "-normals")) { argc--; argv++; show_normals = 1; }
+      else if (!strcmp(*argv, "-edges")) { argc--; argv++; show_edges = 1; }
+      else if (!strcmp(*argv, "-vertices")) { argc--; argv++; show_vertices = 1; }
       else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
       argv++; argc--;
     }
