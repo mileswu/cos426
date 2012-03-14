@@ -36,6 +36,14 @@ IMGS=output/ico_rotate_0.5.jpg \
      output/wineglass_surface_0.2.jpg \
      output/wineglass_surface_0.1.jpg \
      output/wineglass_surface_0.01.jpg \
+     output/ico_edges.jpg \
+     output/ico_splitfaces.jpg \
+     output/ico_normals.jpg \
+     output/sphere_normals.jpg \
+     output/cow_normals.jpg \
+     output/movie.webm \
+     art/movie.mp4
+
 
 all: $(IMGS) 
 
@@ -52,6 +60,10 @@ output/cow.jpg: input/ico.off $(EXE)
 
 output/ico.jpg: input/ico.off $(EXE)
 	src/meshview input/ico.off -output_image output/ico.jpg -exit_immediately
+
+output/ico_edges.jpg: input/ico.off $(EXE)
+	$(EXE) input/ico.off output/ico_edges.off -rotate -0.1 0 0 0 1 0 0
+	src/meshview output/ico_edges.off -output_image output/ico_edges.jpg -exit_immediately -edges
 
 output/sphere.jpg: input/ico.off $(EXE)
 	src/meshview input/sphere.off -output_image output/sphere.jpg -exit_immediately
@@ -162,6 +174,22 @@ output/wineglass_surface_0.1.jpg: input/cow.off $(EXE)
 output/wineglass_surface_0.01.jpg: input/cow.off $(EXE)
 	$(EXE) input/empty.off output/wineglass_surface_0.01.off -revolution input/wineglass_curve.off 0 0 0 0 0 1 0.01 -rotate -1.6 0 0 0 1 0 0
 	src/meshview output/wineglass_surface_0.01.off -output_image output/wineglass_surface_0.01.jpg -exit_immediately
+
+output/ico_splitfaces.jpg: input/cow.off $(EXE)
+	$(EXE) input/ico.off output/ico_splitfaces.off -splitfaces -rotate -0.1 0 0 0 1 0 0
+	src/meshview output/ico_splitfaces.off -output_image output/ico_splitfaces.jpg -exit_immediately -edges
+
+output/ico_normals.jpg: input/cow.off $(EXE)
+	src/meshview input/ico.off -output_image output/ico_normals.jpg -exit_immediately -normals 
+
+output/sphere_normals.jpg: input/cow.off $(EXE)
+	src/meshview input/sphere.off -output_image output/sphere_normals.jpg -exit_immediately -normals 
+
+output/cow_normals.jpg: input/cow.off $(EXE)
+	src/meshview input/cow.off -output_image output/cow_normals.jpg -exit_immediately -normals 
+
+art/%.mp4 output/%.webm: input/cow.off $(EXE)
+	./make_video.sh
 
 clean:
 	rm -f $(IMGS)
