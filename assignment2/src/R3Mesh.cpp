@@ -473,14 +473,14 @@ SplitFaces(void)
 			newvertexs.push_back(v);
 		}
 		for(unsigned int j=0; j<f->vertices.size(); j++) {
-			vector<R3MeshVertex *> temp;
-			temp.push_back(f->vertices[j]);
-			temp.push_back(newvertexs[j]);
+			vector<R3MeshVertex *> corner;
+			corner.push_back(f->vertices[j]);
+			corner.push_back(newvertexs[j]);
 			if(j == 0) 
-				temp.push_back(newvertexs[newvertexs.size()-1]);
+				corner.push_back(newvertexs[newvertexs.size()-1]);
 			else
-				temp.push_back(newvertexs[j-1]);
-			CreateFace(temp);
+				corner.push_back(newvertexs[j-1]);
+			CreateFace(corner);
 		}
 
 		CreateFace(newvertexs);
