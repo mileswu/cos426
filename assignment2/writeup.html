@@ -49,7 +49,8 @@ I believe that I have implemented the following features, which are worth a tota
 
 
 <H3><A name='edges'>Average Edge Lengths</A></H3>
-      <BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+    <p>I added a variable-sized array (C++ STL vector) to the definition of R3MeshVertex so it could store the vectors representing the edges attached to it. This provides O(K) access where K is the number of edges on that vertex. The array is populated during Update(), by cycling through all the faces, calculating the edges and adding them to the vertices' edge array, making sure to avoid duplicates.</p>
+	<p>Since this is hard to show, I did not produce any images showing this feature. However it is used by several of the functions below, so it should be obvious it works.</p><BR>
 <HR>
 	
 <H3><A name='normals'>Per-vertex Normals</A></H3>
@@ -57,25 +58,18 @@ I believe that I have implemented the following features, which are worth a tota
 <TBODY>
   <TR>
     <TD vAlign=top align=middle>
-       <A href="input/meshname_randomnoise_0.0.jpg"><IMG width=200 src="output/meshname_randomnoise_0.0.jpg"></A><BR>       
-       Input 
+       <A href="output/ico_normals.jpg"><IMG width=200 src="output/ico_normals.jpg"></A><BR>       
+        
     </TD>
     <TD vAlign=top align=middle>
-       <A href="input/meshname_randomnoise_0.1.jpg"><IMG width=200 src="output/meshname_randomnoise_0.1.jpg"></A><BR>       
-       0.1 
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/meshname_randomnoise_0.2.jpg"><IMG width=200 src="output/meshname_randomnoise_0.2.jpg"></A><BR>       
-       0.2 
-    </TD>
-    <TD vAlign=top align=middle>
-      <A href="output/meshname_randomnoise_0.4.jpg"><IMG width=200 src="output/meshname_randomnoise_0.4.jpg"></A><BR> 
-      0.4 
+       <A href="output/sphere_normals.jpg"><IMG width=200 src="output/sphere_normals.jpg"></A><BR>       
+       
     </TD>
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+    <p>I added a variable-sized array (C++ STL vector) to the definition of R3MeshVertex so it could store the faces attached to it. This provides O(K) access where K is the number of faces on that vertex. The array is populated during Update(), by cycling through all the faces and adding them to the vertices' face array.</p>
+<BR>
 <HR>
 
 
@@ -104,7 +98,8 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+    <p>For each vertex, the position was translated by a random vector in a sphere of radius factor*AverageEdgeLength for that vertex.</p>
+	<p>Note: the semi-infinite loop is designed to get a truly uniformly random vector within a sphere. Other methods do not produce a truly uniformly random vector. For instance if a random vector within a unit sphere is scaled by another uniformly random number, this does not produce a uniformly random vector within the scaled sphere, as it'll be near the center more often than it should be as the center does not have that much volume.</p>
 <BR>
 <HR>
 
@@ -132,8 +127,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
-<BR>
+	<p>Each vertex is translated along its normal by factor*AverageEdgeLength distance.</p><BR>
 <HR>
 	
 <H3><A name='smooth'>Smooth</A></H3>
@@ -160,7 +154,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>Each vertex is moved to a position determined by the linear combination of itself and its nearest neighbors. The weighting is determined by exp(-dist^2/sigma), where dist is the distance between it and the neighbor and sigma is the AverageEdgeLength, making sure to normalize. The positions are stored and updated at the end in one go so that we never use the new positions in our calculations. </p>
 <BR>
 <HR>
 
@@ -188,7 +182,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>For each vertex find the position determined by the linear combination of itself and its nearest neighbors. The weighting is determined by exp(-dist^2/sigma), where dist is the distance between it and the neighbor and sigma is the AverageEdgeLength, making sure to normalize. Calculate the change in position and reverse it. These translations are stored and applied at the end in one go so that we never use the new positions in our calculations. </p>
 <BR>
 <HR>
 
@@ -216,35 +210,36 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>
+	First we make a copy of the vertices and faces, along with two maps: (Source vertex, Adjacent Vertex)->(New Vertex along edge), (Face, Vertex)->(Two new vertices along edges). For every vertex, we go to every edge making these new vertices along the edge and adding them to the map. Then we go through each attached face, finding the two new vertices on that face and populating the other map. We also make an array of corner pairs.
+	
+	Using these maps we can then go through every face and create a new one that contains a duplicate set of vertices. We then essentially do a find/replace on them to replace each vertex with its pair from the map.
+	With the array of corner pairs we can create the endcap face, by searching through it pair-wise so that each new corner pair must link up with the previous corner pair (eg. 0-4 4-1 1-5 5-11 etc).
+	
+	Finally we delete all the original vertices and faces.
+</p>
 <BR>
 <HR>
 
 
 <H3><A name='splitfaces'>Split faces</A></H3>
+<PRE>meshpro input/ico.off output/ico_splitfaces.off -splitfaces</PRE>
 <TABLE cellSpacing=0 cellPadding=10 border=0>
 <TBODY>
   <TR>
     <TD vAlign=top align=middle>
-       <A href="input/meshname_randomnoise_0.0.jpg"><IMG width=200 src="output/meshname_randomnoise_0.0.jpg"></A><BR>       
+       <A href="output/ico_edges.jpg"><IMG width=200 src="output/ico_edges.jpg"></A><BR>       
        Input 
     </TD>
     <TD vAlign=top align=middle>
-       <A href="input/meshname_randomnoise_0.1.jpg"><IMG width=200 src="output/meshname_randomnoise_0.1.jpg"></A><BR>       
-       0.1 
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/meshname_randomnoise_0.2.jpg"><IMG width=200 src="output/meshname_randomnoise_0.2.jpg"></A><BR>       
-       0.2 
-    </TD>
-    <TD vAlign=top align=middle>
-      <A href="output/meshname_randomnoise_0.4.jpg"><IMG width=200 src="output/meshname_randomnoise_0.4.jpg"></A><BR> 
-      0.4 
+       <A href="output/ico_splitfaces.jpg"><IMG width=200 src="output/ico_splitfaces.jpg"></A><BR>       
+       Output
     </TD>
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR><BR>
+<p>First we save a copy of all the faces. Next we create a map that is from (Vertex, Vertex) to Midpoint Vertex. We then go through each face going around its vertices in a pair-wise fashion (i.e. 01 12 23 etc). For each pair of vertices we check in the map if the midpoint exists; if it does not we create it and add it to the map. These midpoint vertices are then assembled into a new center face. New faces are also created consisting of each corner with its two adjacent midpoints. All the old faces are then deleted.</p>
+<BR>
 <HR>
 
 <H3><A name='starfaces'>Star Faces</A></H3>
@@ -271,7 +266,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>First we save a copy of all the faces. For each face, we determine the centroid by averaging across all its vertices. The center point is then this centroid plus the normal times a factor times the AverageEdgeLength, and a vertex is created here. For each adjacent pair of vertices on this face, a new face is created containing these and the center point. All the old faces are then deleted.</p>
 <BR>
 <HR>
 
@@ -299,7 +294,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>First of all we loop through all the vertices and all their edges to find the shortest edge (which has a pair of vertices). We then move the first vertex to the midpoint. We then go through each face of the second vertex: if it doesn't contain the first vertex then we just replace the second vertex with the first, if it does contain the first vertex we just delete the first vertex, unless there are only three vertexs in which case we remove the face. The second vertex is then deleted.
 <BR>
 <HR>
 
@@ -327,7 +322,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>First we save a copy of the even vertices (original ones). Then SplitFaces() is called. For each vertex we see if it is an even vertex by looking in our copy. If it is, then we do a linear combination of its and its surrounding edges according to the Loop formula. If it is odd, then we first look at all its even neighbours (using our copy to check) and take 3/8 of them. Then we look at it's odd neighbours' even neighbours (being careful to avoid duplication; we use an array to hold ones we have already looked at so we can skip them) and add 1/8 of them. If we don't find two odd neighbours' even neighbours then we use 0.5 of the first neighbors. Once again all the positions are updated at the end in one go, to avoid using new positions in calculations.</p>
 <BR>
 <HR>
 
@@ -355,7 +350,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
 </TBODY>
 </TABLE>
-<BR>Comments about implementation, interesting features, problems, etc.<BR>
+<p>First of we all we delete all the old faces and vertices. For each angle step, we create vertices at each vertex from the profile, except rotated by the angle around the axis. Pairs of adjacent vertices (i.e 01 12 23) from the current angle step are combined with ones from the previous one to form the face.</p>
 <BR>
 <HR>
 
@@ -365,17 +360,9 @@ I believe that I have implemented the following features, which are worth a tota
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-<TABLE cellSpacing=0 cellPadding=10 border=0 vAlign=top align=middle>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="art/art1.jpg"><IMG width=512 src="art/art1.jpg"></A><BR>       
-       If your art contest submission is a movie, include a screenshot and link it <A href="art/art1.avi">here</A><BR>       
-       Description of how the image/movie was made 
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
+<video src="output/movie.webm" controls>You need a HTML5 browser</video>
+<BR><BR>
+This was created by calling "Star Faces" three times and slowly increasing the factor (the height of the star) from an initial value of 0 to 1 over 100 frames.
 <HR><BR>
 
 
