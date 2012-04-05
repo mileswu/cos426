@@ -1,0 +1,7 @@
+# This scene shows a close-up view of one face of a box 
+# with default camera, materials, and lighting.
+# It is useful for testing ray-box intersection.
+
+# An axis-aligned box with default material (-1) and 
+# with lower corner (-1,-1,-1) and upper corner (1,1,1)
+box   -1    -1 -1 -1   1 1 1  
