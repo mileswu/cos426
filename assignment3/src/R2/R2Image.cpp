@@ -1115,7 +1115,7 @@ WriteJPEG(const char *filename) const
   cinfo.dct_method = JDCT_ISLOW;
   jpeg_set_defaults(&cinfo);
   cinfo.optimize_coding = TRUE;
-  jpeg_set_quality(&cinfo, 95, TRUE); // was 75: inadequate for raytracing (smallest images are 64x64 in example and really ugly compression artifacts in anti-aliasing tests -- Martin Fuchs)
+  jpeg_set_quality(&cinfo, 100, TRUE); // was 75: inadequate for raytracing (smallest images are 64x64 in example and really ugly compression artifacts in anti-aliasing tests -- Martin Fuchs)
   jpeg_start_compress(&cinfo, TRUE);
 	
   // Allocate unsigned char buffer for reading image
