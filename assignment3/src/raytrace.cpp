@@ -152,9 +152,14 @@ int IntersectMesh(R3Mesh *m, R3Ray r, R3Point *position, R3Vector *normal, doubl
 
 int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, double *t, R3Node **intersectingnode) {
 	*t = DBL_MAX;
+	R3Ray orig_r = r;
 	R3Point intersectionpoint;
 	R3Vector intersectionnormal;
 	double t_intersection;
+
+	R3Matrix tmatrix = node->transformation;
+	R3Matrix tinvmatrix = tmatrix.Inverse();
+	r.Transform(tinvmatrix);
 
 	if(node->shape != NULL) {
 		R3Shape *shape = node->shape;
@@ -196,6 +201,17 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 	}
 
 	if(*t < DBL_MAX) {
+		normal->Transform(tmatrix);
+		normal->Normalize();
+		position->Transform(tmatrix);
+
+		if(orig_r.Vector()[0] != 0)
+			*t = (*position - orig_r.Start())[0] / orig_r.Vector()[0];
+		else if(orig_r.Vector()[1] != 0)
+			*t = (*position - orig_r.Start())[1] / orig_r.Vector()[1];
+		else
+			*t = (*position - orig_r.Start())[2] / orig_r.Vector()[2];
+
 		return 1;
 	}
 	else {
@@ -212,6 +228,7 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 	R3Vector intersectionnormal;
 	double t;
 	R3Node *n;
+
 	if(IntersectScene(scene, r, &intersectionpoint, &intersectionnormal, &t, &n) != 0) {
 
 		R3Rgb emission = n->material->emission;
@@ -249,8 +266,10 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 				return R3Rgb(1,0,0,1);
 			}
 
+			R3Plane surfplane(intersectionpoint, intersectionnormal);
 			R3Vector reflected = l;
-			reflected.Rotate(intersectionnormal, M_PI/2.0);
+			reflected.Mirror(surfplane);
+			reflected = -reflected;
 
 			R3Vector v = r.Start() - intersectionpoint;
 			v.Normalize();
