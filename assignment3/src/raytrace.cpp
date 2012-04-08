@@ -12,8 +12,8 @@
 using namespace std;
 
 R3Ray ConstructRay(R3Camera c, int x, int y, int width, int height) {
-	c.xfov = 1;
-	c.yfov = 1;
+//	c.xfov = 1;
+//	c.yfov = 1;
 	R3Point pcenter = c.eye + c.towards * c.neardist;
 	R3Vector vright = c.right * c.neardist * tan(c.xfov);
 	R3Vector vup = c.up * c.neardist * tan(c.yfov);
@@ -79,7 +79,9 @@ int IntersectBox(R3Box *b, R3Ray r, R3Point *position, R3Vector *normal, double 
 				int withinface = 1;
 				for(int i2=0; i2<3; i2++) {
 					if(i2 == i) continue; //we know it's on the plane
-					if(intersectposition[i2] < b->Min()[i2] || intersectposition[i2] > b->Max()[i2]) {
+					double min = b->Min()[i2] > b->Max()[i2] ? b->Max()[i2] : b->Min()[i2];
+					double max = b->Min()[i2] > b->Max()[i2] ? b->Min()[i2] : b->Max()[i2];
+					if(intersectposition[i2] < min || intersectposition[i2] > max) {
 						withinface = 0;
 						break;
 					}
