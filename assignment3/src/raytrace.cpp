@@ -150,7 +150,7 @@ int IntersectMesh(R3Mesh *m, R3Ray r, R3Point *position, R3Vector *normal, doubl
 	}
 }
 
-int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, double *t, R3Node **intersectingnode) {
+int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, double *t, R3Node **intersectingnode, R3Node *excludenode) {
 	*t = DBL_MAX;
 	R3Ray orig_r = r;
 	R3Point intersectionpoint;
@@ -161,7 +161,7 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 	R3Matrix tinvmatrix = tmatrix.Inverse();
 	r.Transform(tinvmatrix);
 
-	if(node->shape != NULL) {
+	if(node->shape != NULL && excludenode != node) {
 		R3Shape *shape = node->shape;
 		int intersects = -1;
 		if(shape->type == R3_SPHERE_SHAPE) {
@@ -190,7 +190,7 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 	for(unsigned int i=0; i<node->children.size(); i++) {
 		R3Node *child = node->children[i];
 		R3Node *temp_intersectingnode;
-		if(IntersectNode(child, r, &intersectionpoint, &intersectionnormal, &t_intersection, &temp_intersectingnode) == 1) {
+		if(IntersectNode(child, r, &intersectionpoint, &intersectionnormal, &t_intersection, &temp_intersectingnode, excludenode) == 1) {
 			if(t_intersection < *t) {
 				*t = t_intersection;
 				*position = intersectionpoint;
@@ -219,8 +219,8 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 	}
 }
 
-int IntersectScene(R3Scene *scene, R3Ray r, R3Point *position, R3Vector *normal, double *t, R3Node **intersectingnode) {
-	return(IntersectNode(scene->Root(), r, position, normal, t, intersectingnode));
+int IntersectScene(R3Scene *scene, R3Ray r, R3Point *position, R3Vector *normal, double *t, R3Node **intersectingnode, R3Node *excludenode) {
+	return(IntersectNode(scene->Root(), r, position, normal, t, intersectingnode, excludenode));
 }
 
 R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
@@ -229,7 +229,7 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 	double t;
 	R3Node *n;
 
-	if(IntersectScene(scene, r, &intersectionpoint, &intersectionnormal, &t, &n) != 0) {
+	if(IntersectScene(scene, r, &intersectionpoint, &intersectionnormal, &t, &n, NULL) != 0) {
 
 		R3Rgb emission = n->material->emission;
 		R3Rgb ambient = n->material->ka * scene->ambient;
@@ -273,6 +273,15 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 
 			R3Vector v = r.Start() - intersectionpoint;
 			v.Normalize();
+
+
+			R3Ray shadowray(intersectionpoint, l);
+			int blocked;
+			R3Point shadowipoint; R3Vector shadowinormal; double shadow_t; R3Node *shadownode;
+			blocked = IntersectScene(scene, shadowray, &shadowipoint, &shadowinormal, &shadow_t, &shadownode, n);
+			if(blocked == 1 && shadow_t > 0 ) {
+				continue;
+			}
 
 			if(intersectionnormal.Dot(l) > 0) {
 				diffuse += n->material->kd * light * intersectionnormal.Dot(l);
