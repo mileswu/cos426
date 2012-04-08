@@ -36,7 +36,7 @@ all: \
   ray-primitive \
   ray-scene \
   illumination \
-  transformation \
+#  transformation \
   specular \
   shadow \
   specular \
@@ -66,7 +66,7 @@ ray-primitive: \
   output/box2.jpg  \
   output/ico.jpg \
   output/teapot.jpg \
-  output/cylinder1.jpg  \
+#  output/cylinder1.jpg  \
   output/cylinder2.jpg  \
   output/cone1.jpg \
   output/cone2.jpg 
@@ -87,7 +87,7 @@ illumination: \
   output/dirlight2.jpg \
   output/pointlight2.jpg \
   output/spotlight2.jpg \
-  output/texture.jpg
+#  output/texture.jpg
 
 shadow: \
   output/hardshadow.jpg \

@@ -111,6 +111,7 @@ int IntersectMesh(R3Mesh *m, R3Ray r, R3Point *position, R3Vector *normal, doubl
 		
 		R3Vector trianglenormal = (f->vertices[1]->position - f->vertices[0]->position);
 		trianglenormal.Cross(f->vertices[2]->position - f->vertices[0]->position);
+		trianglenormal.Normalize();
 
 		R3Plane triangleplane(f->vertices[0]->position, trianglenormal);
 

@@ -84,7 +84,9 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+	All intersection functions return the position, normal, 't' and 0/1 depending if it intersects or not.
+		<br/>
+	  Sphere intersection is done using the geometric method. Box intersection is done face-by-face: first it does plane intersection then it checks whether the intersection point is within the bounds of the face rectangle, the closest intersection is returned. The mesh intersection is done on each triangle-face using plane intersection (and then it checks if it is within the triangle); the closest intersection is returned.
     </TD>
   </TR>
 </TBODY>
@@ -120,7 +122,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+		IntersectNode is the recursive function that recurses down the graph, checking all the subnodes for intersections. The closest intersection is chosen. It returns the position, normal, 't' and 0/1 depending if it intersects or not and the node that had the closest intersection (this is needed for material properties).
     </TD>
   </TR>
 </TBODY>
@@ -181,7 +183,8 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+	Phong Illumination was done according to emission + k_a*ambient + Sum over lights (k_d * I_d N.L + k_s * (v.R)^shininess).
+	One thing worth noting is that the diffusion and specular term is only added if N.L > 0 and futhermore the specular term is only added if v.R > 0. This prevents negative lighting.
     </TD>
   </TR>
 </TBODY>
