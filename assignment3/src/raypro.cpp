@@ -9,7 +9,6 @@
 #include "raytrace.h"
 
 
-
 // Program arguments
 
 static char options[] =
@@ -92,6 +91,7 @@ main(int argc, char **argv)
   int max_depth = 0;
   int num_distributed_rays_per_intersection = 0;
   int num_primary_rays_per_pixel = 1;
+	int hardshadows_enabled = 0;
 
   // Parse arguments 
   while (argc > 0) {
@@ -104,6 +104,11 @@ main(int argc, char **argv)
       CheckOption(*argv, argc, 2);
       height = atoi(argv[1]);
       argv += 2, argc -= 2;
+    }
+    else if (!strcmp(*argv, "-hardshadows")) {
+      CheckOption(*argv, argc, 1);
+			hardshadows_enabled = 1;
+      argv += 1, argc -= 1;
     }
     else if (!strcmp(*argv, "-max_depth")) {
       CheckOption(*argv, argc, 2);
@@ -136,7 +141,7 @@ main(int argc, char **argv)
 
   // Render image
   R2Image *image = RenderImage(scene, width, height, max_depth, 
-    num_primary_rays_per_pixel, num_distributed_rays_per_intersection);
+    num_primary_rays_per_pixel, num_distributed_rays_per_intersection, hardshadows_enabled);
   if (!image) {
     fprintf(stderr, "Did not render image from scene\n");
     exit(-1);

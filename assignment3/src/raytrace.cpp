@@ -37,6 +37,12 @@ int IntersectSphere(R3Sphere *s, R3Ray r, R3Point *position, R3Vector *normal, d
 
 	double thc = sqrt(s->Radius() * s->Radius() - d2);
 	*t = thc > 0 ? tca - thc : tca + thc;
+	if(*t < 0) {
+		*t = thc > 0 ? tca + thc : tca - thc;
+	}
+	if(*t < 0) {
+		return 0;
+	}
 	
 	*position = r.Start() + *t * r.Vector();
 	*normal = *position - s->Center();
@@ -87,7 +93,7 @@ int IntersectBox(R3Box *b, R3Ray r, R3Point *position, R3Vector *normal, double 
 					}
 				}
 				
-				if(withinface == 1 && t_intersect < *t) {
+				if(withinface == 1 && t_intersect > 0 && t_intersect < *t) {
 					*t = t_intersect;
 					*position = intersectposition;
 					*normal = facenormal;
@@ -133,7 +139,7 @@ int IntersectMesh(R3Mesh *m, R3Ray r, R3Point *position, R3Vector *normal, doubl
 				}
 			}
 			
-			if(withintriangle == 1 && t_intersection < *t) {
+			if(withintriangle == 1 && t_intersection > 0 && t_intersection < *t) {
 				*t = t_intersection;
 				*position = intersectionpoint;
 				*normal = trianglenormal;
@@ -178,7 +184,7 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 		}
 
 		if(intersects == 1) {
-			if(t_intersection < *t) {
+			if(t_intersection > 0 && t_intersection < *t) {
 				*t = t_intersection;
 				*position = intersectionpoint;
 				*normal = intersectionnormal;
@@ -191,7 +197,7 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 		R3Node *child = node->children[i];
 		R3Node *temp_intersectingnode;
 		if(IntersectNode(child, r, &intersectionpoint, &intersectionnormal, &t_intersection, &temp_intersectingnode, excludenode) == 1) {
-			if(t_intersection < *t) {
+			if(t_intersection > 0 && t_intersection < *t) {
 				*t = t_intersection;
 				*position = intersectionpoint;
 				*normal = intersectionnormal;
@@ -223,18 +229,19 @@ int IntersectScene(R3Scene *scene, R3Ray r, R3Point *position, R3Vector *normal,
 	return(IntersectNode(scene->Root(), r, position, normal, t, intersectingnode, excludenode));
 }
 
-R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
+R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenode, int hardshadows_enabled) {
 	R3Point intersectionpoint;
 	R3Vector intersectionnormal;
 	double t;
 	R3Node *n;
 
-	if(IntersectScene(scene, r, &intersectionpoint, &intersectionnormal, &t, &n, NULL) != 0) {
+	if(IntersectScene(scene, r, &intersectionpoint, &intersectionnormal, &t, &n, excludenode) != 0) {
 
 		R3Rgb emission = n->material->emission;
 		R3Rgb ambient = n->material->ka * scene->ambient;
 		R3Rgb diffuse(0,0,0,1);
 		R3Rgb specular(0,0,0,1);
+		R3Rgb reflection(0,0,0,1);
 		for(unsigned int i=0; i<scene->lights.size(); i++) {
 			R3Rgb light = scene->lights[i]->color;
 
@@ -280,7 +287,8 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 			R3Point shadowipoint; R3Vector shadowinormal; double shadow_t; R3Node *shadownode;
 			blocked = IntersectScene(scene, shadowray, &shadowipoint, &shadowinormal, &shadow_t, &shadownode, n);
 			if(blocked == 1 && shadow_t > 0 ) {
-				continue;
+				if(hardshadows_enabled == 1)
+					continue;
 			}
 
 			if(intersectionnormal.Dot(l) > 0) {
@@ -289,9 +297,21 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 					specular += n->material->ks * light * pow(v.Dot(reflected), n->material->shininess);
 				}
 			}
+
+		}
+		if(max_depth > 0) {
+			R3Vector v = r.Start() - intersectionpoint;
+			R3Plane surfplane(intersectionpoint, intersectionnormal);
+			R3Vector reflected = v;
+			reflected.Mirror(surfplane);
+			reflected.Normalize();
+			reflected = -reflected;
+			R3Ray r_reflection(intersectionpoint, reflected);
+			
+			reflection += n->material->ks * ComputeRadiance(scene, r_reflection, max_depth - 1, n, hardshadows_enabled);
 		}
 
-		return (emission + ambient + diffuse + specular);
+		return (emission + ambient + diffuse + specular + reflection);
 	} else {
 		return scene->background;
 	}
@@ -320,7 +340,7 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r) {
 ////////////////////////////////////////////////////////////////////////
 
 R2Image *RenderImage(R3Scene *scene, int width, int height, int max_depth,
-  int num_primary_rays_per_pixel, int num_distributed_rays_per_intersection)
+  int num_primary_rays_per_pixel, int num_distributed_rays_per_intersection, int hardshadows_enabled)
 {
   // Allocate  image
   R2Image *image = new R2Image(width, height);
@@ -332,7 +352,7 @@ R2Image *RenderImage(R3Scene *scene, int width, int height, int max_depth,
 	for(int i=0; i<width; i++) {
 		for(int j=0; j<height; j++) {
 			R3Ray ray = ConstructRay(scene->camera, i, j, width, height);
-			R3Rgb radiance = ComputeRadiance(scene, ray);
+			R3Rgb radiance = ComputeRadiance(scene, ray, max_depth, NULL, hardshadows_enabled);
 			image->SetPixel(i, j, radiance);
 		}
 	}
