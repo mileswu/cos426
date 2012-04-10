@@ -327,6 +327,8 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 		R3Rgb diffuse(0,0,0,1);
 		R3Rgb specular(0,0,0,1);
 		R3Rgb reflection(0,0,0,1);
+		R3Rgb transmission(0,0,0,1);
+
 		for(unsigned int i=0; i<scene->lights.size(); i++) {
 			R3Rgb light = scene->lights[i]->color;
 
@@ -385,6 +387,7 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 
 		}
 		if(max_depth > 0) {
+			//Reflection
 			R3Vector v = r.Start() - intersectionpoint;
 			R3Plane surfplane(intersectionpoint, intersectionnormal);
 			R3Vector reflected = v;
@@ -394,9 +397,17 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 			R3Ray r_reflection(intersectionpoint, reflected);
 			
 			reflection += n->material->ks * ComputeRadiance(scene, r_reflection, max_depth - 1, n, hardshadows_enabled);
+
+
+			//Transmission
+			R3Rgb blank(0,0,0,1);
+			if(n->material->kt != blank) {
+				R3Ray r_transmission(intersectionpoint, r.Vector());
+				transmission += n->material->kt * ComputeRadiance(scene, r_transmission, max_depth - 1, n, hardshadows_enabled);
+			}
 		}
 
-		return (emission + ambient + diffuse + specular + reflection);
+		return (emission + ambient + diffuse + specular + reflection + transmission);
 	} else {
 		return scene->background;
 	}
