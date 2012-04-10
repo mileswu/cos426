@@ -119,6 +119,89 @@ int IntersectCylinder(R3Cylinder *c, R3Ray r, R3Point *position, R3Vector *norma
 	}
 }
 
+int IntersectCone(R3Cone *c, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
+	R3Vector v = r.Vector();
+	R3Point s = r.Start();
+	*t = DBL_MAX;
+
+	double k = pow(c->Radius() / c->Height(), 2.0);
+	double y_apex = c->Center()[1] + c->Height() / 2.0;
+	// check cone side
+	double eqa = v[0]*v[0] + v[2]*v[2] - k*v[1]*v[1];
+	double eqb = 2.0*v[0]*(s[0] - c->Center()[0]) + 2.0*v[2]*(s[2] - c->Center()[2]) - 2.0*k*v[1]*(s[1] - y_apex);
+	double eqc = pow(s[0] - c->Center()[0], 2.0) + pow(s[2] - c->Center()[2], 2.0) - k*pow(s[1] - y_apex, 2.0);
+
+	double t1, t2;
+	t1 = (-eqb + sqrt(eqb*eqb - 4.0*eqa*eqc))/2.0/eqa;
+	t2 = (-eqb - sqrt(eqb*eqb - 4.0*eqa*eqc))/2.0/eqa;
+
+	R3Point possible1, possible2;
+	possible1 = r.Start() + r.Vector()*t1;
+	possible2 = r.Start() + r.Vector()*t2;
+
+	// Check if in y range
+	if(possible1[1] < c->Center()[1] - c->Height()/2.0 || possible1[1] > c->Center()[1] + c->Height()/2.0) {
+		t1 = -1;
+	}
+	if(possible2[1] < c->Center()[1] - c->Height()/2.0 || possible2[1] > c->Center()[1] + c->Height()/2.0) {
+		t2 = -1;
+	}
+	if(t1 > 0 && t2 > 0) {
+		if(t1 > t2) {
+			*t = t2;
+			*position = possible2;
+			*normal = R3Vector(possible2[0] - c->Center()[0], 0, possible2[2] - c->Center()[2]);
+			normal->Normalize();
+			(*normal)[1] = k;
+		}
+		else {
+			*t = t1;
+			*position = possible1;
+			*normal = R3Vector(possible1[0] - c->Center()[0], 0, possible1[2] - c->Center()[2]);
+			normal->Normalize();
+			(*normal)[1] = k;
+		}
+	}
+	else if(t1 > 0) {
+		*t = t1;
+		*position = possible1;
+		*normal = R3Vector(possible1[0] - c->Center()[0], 0, possible1[2] - c->Center()[2]);
+		normal->Normalize();
+		(*normal)[1] = k;
+	}
+	else if(t2 > 0) {
+		*t = t2;
+		*position = possible2;
+		*normal = R3Vector(possible2[0] - c->Center()[0], 0, possible2[2] - c->Center()[2]);
+		normal->Normalize();
+		(*normal)[1] = k;
+	}
+
+	//Check endcaps
+	R3Vector norm_y(0, -1, 0);
+	R3Point planepoint(c->Center()[0], c->Center()[1] - c->Height()/2.0, c->Center()[2]);
+	R3Plane plane(planepoint, norm_y);
+	
+	R3Point endcap_p;
+	double endcap_t;
+	if(IntersectPlane(&plane, r, &endcap_p, &norm_y, &endcap_t) == 1) {
+		if(pow(endcap_p[0] - c->Center()[0], 2.0) + pow(endcap_p[2] - c->Center()[2], 2.0) < c->Radius()*c->Radius() && endcap_t > 0) {
+			if(endcap_t < *t) {
+				*t = endcap_t;
+				*position = endcap_p;
+				*normal = norm_y;
+			}
+		}
+	}
+
+	if(*t < DBL_MAX) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 int IntersectSphere(R3Sphere *s, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
 	R3Vector l = s->Center() - r.Start();
 	double tca = l.Dot(r.Vector());
@@ -266,6 +349,10 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 		else if(shape->type == R3_CYLINDER_SHAPE) {
 			R3Cylinder *c = shape->cylinder;
 			intersects = IntersectCylinder(c, r, &intersectionpoint, &intersectionnormal, &t_intersection);
+		}
+		else if(shape->type == R3_CONE_SHAPE) {
+			R3Cone *c = shape->cone;
+			intersects = IntersectCone(c, r, &intersectionpoint, &intersectionnormal, &t_intersection);
 		}
 
 		if(intersects == 1) {
