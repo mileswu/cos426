@@ -27,6 +27,98 @@ R3Ray ConstructRay(R3Camera c, int x, int y, int width, int height) {
 	return R3Ray(c.eye, v);
 }
 
+int IntersectPlane(R3Plane *p, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
+	double denom = r.Vector().Dot(p->Normal());
+	if(denom == 0) {
+		return 0;
+	} else {
+		*t = - (r.Start().Vector().Dot(p->Normal()) + p->D()) / denom;
+		*position = r.Start() + *t * r.Vector();
+		*normal = p->Normal();
+		return 1;
+	}
+}
+
+int IntersectCylinder(R3Cylinder *c, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
+	R3Vector v = r.Vector();
+	R3Point s = r.Start();
+	*t = DBL_MAX;
+
+	// check cylinder sides on infinite
+	double eqa = v[0]*v[0] + v[2]*v[2];
+	double eqb = 2.0*v[0]*(s[0] - c->Center()[0]) + 2.0*v[2]*(s[2] - c->Center()[2]);
+	double eqc = pow(s[0] - c->Center()[0], 2.0) + pow(s[2] - c->Center()[2], 2.0) - c->Radius()*c->Radius();
+
+	double t1, t2;
+	t1 = (-eqb + sqrt(eqb*eqb - 4.0*eqa*eqc))/2.0/eqa;
+	t2 = (-eqb - sqrt(eqb*eqb - 4.0*eqa*eqc))/2.0/eqa;
+
+	R3Point possible1, possible2;
+	possible1 = r.Start() + r.Vector()*t1;
+	possible2 = r.Start() + r.Vector()*t2;
+
+	// Check if in y range
+	if(possible1[1] < c->Center()[1] - c->Height()/2.0 || possible1[1] > c->Center()[1] + c->Height()/2.0) {
+		t1 = -1;
+	}
+	if(possible2[1] < c->Center()[1] - c->Height()/2.0 || possible2[1] > c->Center()[1] + c->Height()/2.0) {
+		t2 = -1;
+	}
+	if(t1 > 0 && t2 > 0) {
+		if(t1 > t2) {
+			*t = t2;
+			*position = possible2;
+			*normal = R3Vector(possible2[0] - c->Center()[0], 0, possible2[2] - c->Center()[2]);
+			normal->Normalize();
+		}
+		else {
+			*t = t1;
+			*position = possible1;
+			*normal = R3Vector(possible1[0] - c->Center()[0], 0, possible1[2] - c->Center()[2]);
+			normal->Normalize();
+		}
+	}
+	else if(t1 > 0) {
+		*t = t1;
+		*position = possible1;
+		*normal = R3Vector(possible1[0] - c->Center()[0], 0, possible1[2] - c->Center()[2]);
+		normal->Normalize();
+	}
+	else if(t2 > 0) {
+		*t = t2;
+		*position = possible2;
+		*normal = R3Vector(possible2[0] - c->Center()[0], 0, possible2[2] - c->Center()[2]);
+		normal->Normalize();
+	}
+
+	//Check endcaps
+	for(int i=0; i<2; i++) {
+		R3Vector norm_y(0, i == 0 ? 1 : -1, 0);
+		double sign = (i == 0 ? 1.0 : -1.0);
+		R3Point planepoint(c->Center()[0], c->Center()[1] + sign*c->Height()/2.0, c->Center()[2]);
+		R3Plane plane(planepoint, norm_y);
+		
+		R3Point endcap_p;
+		double endcap_t;
+		if(IntersectPlane(&plane, r, &endcap_p, &norm_y, &endcap_t) == 1) {
+			if(pow(endcap_p[0] - c->Center()[0], 2.0) + pow(endcap_p[2] - c->Center()[2], 2.0) < c->Radius()*c->Radius() && endcap_t > 0) {
+				if(endcap_t < *t) {
+					*t = endcap_t;
+					*position = endcap_p;
+					*normal = norm_y;
+				}
+			}
+		}
+	}
+
+	if(*t < DBL_MAX) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 int IntersectSphere(R3Sphere *s, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
 	R3Vector l = s->Center() - r.Start();
 	double tca = l.Dot(r.Vector());
@@ -51,17 +143,6 @@ int IntersectSphere(R3Sphere *s, R3Ray r, R3Point *position, R3Vector *normal, d
 	return 1;
 }
 
-int IntersectPlane(R3Plane *p, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
-	double denom = r.Vector().Dot(p->Normal());
-	if(denom == 0) {
-		return 0;
-	} else {
-		*t = - (r.Start().Vector().Dot(p->Normal()) + p->D()) / denom;
-		*position = r.Start() + *t * r.Vector();
-		*normal = p->Normal();
-		return 1;
-	}
-}
 
 int IntersectBox(R3Box *b, R3Ray r, R3Point *position, R3Vector *normal, double *t) {
 	*t = DBL_MAX;
@@ -181,6 +262,10 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 		else if(shape->type == R3_MESH_SHAPE) {
 			R3Mesh *m = shape->mesh;
 			intersects = IntersectMesh(m, r, &intersectionpoint, &intersectionnormal, &t_intersection);
+		}
+		else if(shape->type == R3_CYLINDER_SHAPE) {
+			R3Cylinder *c = shape->cylinder;
+			intersects = IntersectCylinder(c, r, &intersectionpoint, &intersectionnormal, &t_intersection);
 		}
 
 		if(intersects == 1) {
