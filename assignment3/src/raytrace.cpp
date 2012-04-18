@@ -443,8 +443,12 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 					l *= 0;
 				}
 			} else if(scene->lights[i]->type == R3_AREA_LIGHT) {
-				printf("Not implemented\n");
-				return R3Rgb(1,0,0,1);
+				l = scene->lights[i]->position - intersectionpoint;
+				double dist = sqrt(l.Dot(l));
+				
+        l = -scene->lights[i]->direction;
+				
+				light *= 1.0 / (scene->lights[i]->constant_attenuation + scene->lights[i]->linear_attenuation * dist + scene->lights[i]->quadratic_attenuation * dist * dist);
 			}
 
 			R3Plane surfplane(intersectionpoint, intersectionnormal);
@@ -523,7 +527,7 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 ////////////////////////////////////////////////////////////////////////
 
 R2Image *RenderImage(R3Scene *scene, int width, int height, int max_depth,
-  int num_primary_rays_per_pixel, int num_distributed_rays_per_intersection, int hardshadows_enabled)
+  int num_primary_rays_per_pixel, int num_distributed_rays_per_intersection, int hardshadows_enabled, int progress)
 {
   // Allocate  image
   R2Image *image = new R2Image(width, height);
@@ -532,8 +536,12 @@ R2Image *RenderImage(R3Scene *scene, int width, int height, int max_depth,
     return NULL;
   }
 
+	int counter = 0;
 	for(int i=0; i<width; i++) {
 		for(int j=0; j<height; j++) {
+			counter++;
+			if(progress == 1) 
+				printf("Progress: %f percent\n", (double)counter*100.0/((double)width*(double)height));
 			R3Ray ray = ConstructRay(scene->camera, i, j, width, height);
 			R3Rgb radiance = ComputeRadiance(scene, ray, max_depth, NULL, hardshadows_enabled);
 			image->SetPixel(i, j, radiance);

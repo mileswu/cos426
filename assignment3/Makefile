@@ -40,10 +40,11 @@ all: \
   specular \
   transmission \
   transformation \
+  output/interestingscene.jpg
   #specular \
   refraction \
   antialias \
-  distributed 
+  distributed
 
 
 
@@ -117,7 +118,7 @@ refraction: \
 transformation: \
   output/mixedprimitives3.jpg \
   output/transform.jpg \
-  output/stack.jpg 
+  #output/stack.jpg 
 
 antialias: \
   output/antialias1.jpg \
@@ -182,3 +183,9 @@ output/distributed3_%.jpg: input/distributed.scn
 	$(EXE) $< $@ -distribute $* -max_depth 3 $(DISTRIBUTED_SIZE)
 	touch $@.finished
 	echo $@ done.
+
+output/hardshadow.jpg: input/hardshadow.scn
+	$(EXE) $< $@ -hardshadows
+
+output/interestingscene.jpg: input/interestingscene.scn
+	$(EXE) $< $@ -hardshadows -width 512 -height 512 -max_depth 3
