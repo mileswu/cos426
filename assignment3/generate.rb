@@ -27,10 +27,11 @@ end
 
 i = 0
 output.each do |s|
-	r = rand()
-	g = rand()
-	b = rand()
-	puts "material 0 0 0 #{r} #{g} #{b} #{r} #{g} #{b} 0 0 0 0 0 0 5 0 0"
+	factor = 0.8
+	r = rand()*factor
+	g = rand()*factor
+	b = rand()*factor
+	puts "material 0 0 0 #{r} #{g} #{b} #{r} #{g} #{b} 0 0 0 0 0 0 50 0 0"
 	puts "sphere #{i} #{s.x} #{s.y} #{s.z} #{s.r}"
 	i+=1
 end
