@@ -6,8 +6,8 @@ COS 426 Assignment 3
 <BODY>
 <CENTER>
 <H2>
-COS 426, Spring 2011<BR>
-NAME, LOGIN<BR>           <!-- Fill in your name and login -->
+COS 426, Spring 2012<BR>
+Miles Wu, mawu<BR>           <!-- Fill in your name and login -->
 </H2>                     
 </CENTER>
 <HR><BR>
@@ -19,7 +19,7 @@ NAME, LOGIN<BR>           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-I believe that I have implemented the following features, which are worth a total of xxx points:
+I believe that I have implemented the following features, which are worth a total of 20 points:
 <H3> Basic Ray Generation </H3>
 <UL>
   <LI>(1) Generate at ray for each pixel</LI>
@@ -30,49 +30,29 @@ I believe that I have implemented the following features, which are worth a tota
   <LI>(1) <A href="#primitive">Intersect a ray with an axis-aligned box</A></LI>
   <LI>(2) <A href="#primitive">Intersect a ray with a polygonal mesh</A></LI>
   <LI>(2) <A href="#primitive">Intersect a ray with an axis-aligned cylinder</A></LI>
-  <LI>(2) <A href="#primitive">Intersect a ray with an axis-aligned cone</A></LI>
+  <LI>(3) <A href="#primitive">Intersect a ray with an axis-aligned cone</A></LI>
 </UL>
 <H3> Ray-Scene Intersection </H3>
 <UL>
   <LI>(1) <A href="#scene">Intersect a ray with a scene</A></LI>
   <LI>(1) <A href="#transformations">Handle scene traversals with modeling transformations</A></LI>
-  <LI>(1) <A href="#accelerate">Accelerate ray-scene intersections with bounding box checks</A></LI>
-  <LI>(1) <A href="#accelerate">Accelerate ray-scene intersections by caching ray interesections</A></LI>
-  <LI>(1) <A href="#accelerate">Accelerate ray-scene intersections by visiting nodes front to back</A></LI>
-  <LI>(2) <A href="#accelerate">Accelerate ray-mesh intersections using a grid</A></LI>
-  <LI>(3) <A href="#accelerate">Accelerate ray-mesh intersections using an octree</A></LI>
-  <LI>(3) <A href="#accelerate">Accelerate ray-mesh intersections using a BSP tree</A></LI>
 </UL>
 <H3> Illumination </H3>
 <UL>
   <LI>(2) <A href="#illumination">Phong illumination</A></LI>
-  <LI>(2) <A href="#texture">Texture mapping</A></LI>
 </UL>
 <H3> Shadows </H3>
 <UL>
   <LI>(1) <A href="#shadow">Shadow rays</A></LI>
-  <LI>(2) <A href="#shadow">Area lights and soft shadow</A></LI>
 </UL>
 <H3> Global Illumination </H3>
 <UL>
   <LI>(2) <A href="#specular">Specular reflection</A></LI>
   <LI>(1) <A href="#transmission">Transmission</A></LI>
-  <LI>(2) <A href="#refraction">Refraction</A></LI>
-  <LI>(3) <A href="#distributed">Distributed ray tracing</A></LI>
-</UL>
-<H3> Camera effects </H3>
-<UL>
-  <LI>(1) <A href="#antialias">Camera antialiasing</A></LI>
-</UL>
-<H3> Debug </H3>
-<UL>
-  <LI>(2) <A href="#debug">Primary ray visualization</A></LI>
-  <LI>(2) <A href="#debug">Secondary ray visualization</A></LI>
 </UL>
 <H3> Input </H3>
 <UL>
   <LI>(1) <A href="#input">Make an interesting scene</A></LI>
-  <LI>(1) <A href="#xxx">Movie</A></LI>
 </UL>
 <H3> Art contest </H3>
 <UL>
@@ -146,8 +126,9 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
-    </TD>
+		All intersection functions return the position, normal, 't' and 0/1 depending if it intersects or not.
+			<br/>
+		  Sphere intersection is done using the geometric method. Box intersection is done face-by-face: first it does plane intersection then it checks whether the intersection point is within the bounds of the face rectangle, the closest intersection is returned. The mesh intersection is done on each triangle-face using plane intersection (and then it checks if it is within the triangle); the closest intersection is returned.    </TD>
   </TR>
 </TBODY>
 </TABLE>
@@ -181,7 +162,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+		IntersectNode is the recursive function that recurses down the graph, checking all the subnodes for intersections. The closest intersection is chosen. It returns the position, normal, 't' and 0/1 depending if it intersects or not and the node that had the closest intersection (this is needed for material properties).
     </TD>
   </TR>
 </TBODY>
@@ -242,34 +223,13 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+		Phong Illumination was done according to emission + k_a*ambient + Sum over lights (k_d * I_d N.L + k_s * (v.R)^shininess).
+		One thing worth noting is that the diffusion and specular term is only added if N.L > 0 and futhermore the specular term is only added if v.R > 0. This prevents negative lighting.
     </TD>
   </TR>
 </TBODY>
 </TABLE>
 <HR><BR>
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='texture'>Texture</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/texture.jpg"><IMG width=256 src="output/texture.jpg"></A><BR>       
-       <A href="input/texture.scn">texture.scn</A>
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="1">
-      Comments about implementations, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
 
 <!------------------------------------------------------------------------> 
 
@@ -280,10 +240,6 @@ I believe that I have implemented the following features, which are worth a tota
     <TD vAlign=top align=middle>
        <A href="output/hardshadow.jpg"><IMG width=256 src="output/hardshadow.jpg"></A><BR>       
        <A href="input/hardshadow.scn">hardshadow.scn</A>
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/softshadow.jpg"><IMG width=256 src="output/softshadow.jpg"></A><BR>       
-       <A href="input/softshadow.scn">softshadow.scn</A>
     </TD>
   </TR>
   <TR>
@@ -381,292 +337,6 @@ I believe that I have implemented the following features, which are worth a tota
 </TBODY>
 </TABLE>
 <HR><BR>
-
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='refraction'>Refraction</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/refraction.0.jpg"><IMG width=256 src="output/refraction.0.jpg"></A><BR>       
-       -max_depth 0
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/refraction.1.jpg"><IMG width=256 src="output/refraction.1.jpg"></A><BR>       
-       -max_depth 1
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/refraction.2.jpg"><IMG width=256 src="output/refraction.2.jpg"></A><BR>       
-       -max_depth 2
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      <A href="input/refraction.scn">refraction.scn</A><BR>&nbsp;<BR>
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='transformations'>Handle scene traversals with modeling transformations</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/mixedprimitives3.jpg"><IMG width=256 src="output/mixedprimitives3.jpg"></A><BR>       
-       <A href="input/mixedprimitives3.scn">mixedprimitives3.scn</A> 
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/transform.jpg"><IMG width=256 src="output/transform.jpg"></A><BR>       
-       <A href="input/transform.scn">transform.scn</A> 
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='distributed'>Distributed Ray Tracing</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_0.jpg"><IMG width=256 src="output/distributed1_0.jpg"></A><BR>       
-        -max_depth 1 -distribute 0
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_1.jpg"><IMG width=256 src="output/distributed1_1.jpg"></A><BR>       
-        -max_depth 1 -distribute 1
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_4.jpg"><IMG width=256 src="output/distributed1_4.jpg"></A><BR>       
-       -max_depth 1 -distribute 4
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_16.jpg"><IMG width=256 src="output/distributed1_16.jpg"></A><BR>       
-       -max_depth 1 -distribute 16
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_64.jpg"><IMG width=256 src="output/distributed1_64.jpg"></A><BR>       
-       -max_depth 1 -distribute 64
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed1_256.jpg"><IMG width=256 src="output/distributed1_256.jpg"></A><BR>       
-       -max_depth 1 -distribute 256
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_0.jpg"><IMG width=256 src="output/distributed2_0.jpg"></A><BR>       
-       -max_depth 2 -distribute 0
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_1.jpg"><IMG width=256 src="output/distributed2_1.jpg"></A><BR>       
-       -max_depth 2 -distribute 1
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_4.jpg"><IMG width=256 src="output/distributed2_4.jpg"></A><BR>       
-       -max_depth 2 -distribute 4
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_16.jpg"><IMG width=256 src="output/distributed2_16.jpg"></A><BR>       
-       -max_depth 2 -distribute 16
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_64.jpg"><IMG width=256 src="output/distributed2_64.jpg"></A><BR>       
-       -max_depth 2 -distribute 64
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed2_256.jpg"><IMG width=256 src="output/distributed2_256.jpg"></A><BR>       
-       -max_depth 2 -distribute 256
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed3_0.jpg"><IMG width=256 src="output/distributed3_0.jpg"></A><BR>       
-       -max_depth 3 -distribute 0
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed3_1.jpg"><IMG width=256 src="output/distributed3_1.jpg"></A><BR>       
-       -max_depth 3 -distribute 1
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed3_4.jpg"><IMG width=256 src="output/distributed3_4.jpg"></A><BR>       
-       -max_depth 3 -distribute 4
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed3_16.jpg"><IMG width=256 src="output/distributed3_16.jpg"></A><BR>       
-       -max_depth 3 -distribute 16
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/distributed3_64.jpg"><IMG width=256 src="output/distributed3_64.jpg"></A><BR>       
-       -max_depth 3 -distribute 64
-    </TD>
-    <TD vAlign=top align=middle>
-      This picture would require casting more than 16 million rays / pixel!
-<!----       <A href="output/distributed3_256.jpg"><IMG width=256
-							src="output/distributed3_256.jpg"></A><BR>        
----->
-       -max_depth 3 -distribute 256
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="6">
-      <A href="input/distributed.scn">distributed.scn</A><BR>&nbsp;<BR>
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='antialias'>Camera Antialiasing</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/antialias1.jpg"><IMG width=256 src="output/antialias1.jpg"></A><BR>       
-       -antialias 1
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/antialias4.jpg"><IMG width=256 src="output/antialias4.jpg"></A><BR>       
-       -antialias 4
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/antialias16.jpg"><IMG width=256 src="output/antialias16.jpg"></A><BR>       
-       -antialias 16
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/antialias256.jpg"><IMG width=256 src="output/antialias256.jpg"></A><BR>       
-       -antialias 256
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      <A href="input/sphere.scn">sphere.scn</A> -width 64 -height 64<BR>&nbsp;<BR>
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='accelerate'>Ray Intersection Acceleration</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/stack.jpg"><IMG width=256 src="output/stack.jpg"></A><BR>       
-       No acceleration (XXX seconds)
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_bbox.jpg"><IMG width=256 src="output/stack_bbox.jpg"></A><BR>       
-       Node bounding box checks (XXX seconds)
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_cache.jpg"><IMG width=256 src="output/stillife_cache.jpg"></A><BR>       
-       Cache last interesection (XXX seconds)
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_fronttoback.jpg"><IMG width=256 src="output/stillife_fronttoback.jpg"></A><BR>       
-       Front-to-back order (XXX seconds)
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_grid.jpg"><IMG width=256 src="output/stillife_grid.jpg"></A><BR>       
-       Grid (XXX seconds)
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_octree.jpg"><IMG width=256 src="output/stillife_octree.jpg"></A><BR>       
-       Octree (XXX seconds)
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/stack_bsp.jpg"><IMG width=256 src="output/stillife_bsp.jpg"></A><BR>       
-       BSP (XXX seconds)
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      <A href="input/stack.scn">stack.scn</A><BR>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.<BR>
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
-
-<!------------------------------------------------------------------------> 
-
-<H3><A name='debug'>Visual Debugging</A></H3>
-<TABLE cellSpacing=0 cellPadding=10 border=0>
-<TBODY>
-  <TR>
-    <TD vAlign=top align=middle>
-       <A href="output/primary.jpg"><IMG width=256 src="output/primary.jpg"></A><BR>       
-       Primary rays
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/secondary1.jpg"><IMG width=256 src="output/secondary1.jpg"></A><BR>       
-       Secondary rays (-max_depth 1)
-    </TD>
-    <TD vAlign=top align=middle>
-       <A href="output/secondary2.jpg"><IMG width=256 src="output/secondary2.jpg"></A><BR>       
-       Secondary rays (-max_depth 2)
-    </TD>
-  </TR>
-  <TR>
-    <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
-    </TD>
-  </TR>
-</TBODY>
-</TABLE>
-<HR><BR>
-
 
 
 <!------------------------------------------------------------------------> 

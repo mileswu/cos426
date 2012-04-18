@@ -36,11 +36,11 @@ all: \
   ray-primitive \
   ray-scene \
   illumination \
-#  transformation \
-  specular \
   shadow \
   specular \
   transmission \
+  transformation \
+  #specular \
   refraction \
   antialias \
   distributed 
@@ -66,7 +66,7 @@ ray-primitive: \
   output/box2.jpg  \
   output/ico.jpg \
   output/teapot.jpg \
-#  output/cylinder1.jpg  \
+  output/cylinder1.jpg  \
   output/cylinder2.jpg  \
   output/cone1.jpg \
   output/cone2.jpg 
@@ -91,7 +91,7 @@ illumination: \
 
 shadow: \
   output/hardshadow.jpg \
-  output/softshadow.jpg
+  #output/softshadow.jpg
 
 specular: \
   output/specular.0.jpg \
