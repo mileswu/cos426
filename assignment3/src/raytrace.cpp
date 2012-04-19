@@ -368,6 +368,14 @@ int IntersectNode(R3Node *node, R3Ray r, R3Point *position, R3Vector *normal, do
 	for(unsigned int i=0; i<node->children.size(); i++) {
 		R3Node *child = node->children[i];
 		R3Node *temp_intersectingnode;
+		
+		if(IntersectBox(&(child->bbox), r, &intersectionpoint, &intersectionnormal, &t_intersection) == 1) {
+      if(t_intersection > *t) continue;
+		}
+		else {
+      continue;
+		}
+		
 		if(IntersectNode(child, r, &intersectionpoint, &intersectionnormal, &t_intersection, &temp_intersectingnode, excludenode) == 1) {
 			if(t_intersection > 0 && t_intersection < *t) {
 				*t = t_intersection;

@@ -118,7 +118,7 @@ refraction: \
 transformation: \
   output/mixedprimitives3.jpg \
   output/transform.jpg \
-  #output/stack.jpg 
+  output/stack.jpg 
 
 antialias: \
   output/antialias1.jpg \

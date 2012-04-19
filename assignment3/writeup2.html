@@ -19,7 +19,7 @@ Miles Wu, mawu<BR>           <!-- Fill in your name and login -->
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
 
-I believe that I have implemented the following features, which are worth a total of 20 points:
+I believe that I have implemented the following features, which are worth a total of 22 points:
 <H3> Basic Ray Generation </H3>
 <UL>
   <LI>(1) Generate at ray for each pixel</LI>
@@ -36,6 +36,7 @@ I believe that I have implemented the following features, which are worth a tota
 <UL>
   <LI>(1) <A href="#scene">Intersect a ray with a scene</A></LI>
   <LI>(1) <A href="#transformations">Handle scene traversals with modeling transformations</A></LI>
+  <LI>(1) <A href="#accelerate">Accelerate ray-scene intersections with bounding box checks</A></LI>
 </UL>
 <H3> Illumination </H3>
 <UL>
@@ -57,6 +58,7 @@ I believe that I have implemented the following features, which are worth a tota
 <H3> Art contest </H3>
 <UL>
   <LI>(1) <A href="#art">Art contest submission</A></LI>
+  <LI>(1) <A href="#movie">Movie</A></LI>
 </UL>
 <HR><BR>
 
@@ -128,7 +130,7 @@ I believe that I have implemented the following features, which are worth a tota
     <TD vAlign=top align=middle colspan="3">
 		All intersection functions return the position, normal, 't' and 0/1 depending if it intersects or not.
 			<br/>
-		  Sphere intersection is done using the geometric method. Box intersection is done face-by-face: first it does plane intersection then it checks whether the intersection point is within the bounds of the face rectangle, the closest intersection is returned. The mesh intersection is done on each triangle-face using plane intersection (and then it checks if it is within the triangle); the closest intersection is returned.    </TD>
+		  Sphere intersection is done using the geometric method. Box intersection is done face-by-face: first it does plane intersection then it checks whether the intersection point is within the bounds of the face rectangle, the closest intersection is returned. The mesh intersection is done on each triangle-face using plane intersection (and then it checks if it is within the triangle); the closest intersection is returned. The cone and cylinder are done by solving the algebraic equation, and then checking the endcaps.</TD>
   </TR>
 </TBODY>
 </TABLE>
@@ -186,7 +188,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+      The inverse matrix is applied in our IntersectNode to the ray. Then the position and the normal are transformed by the matrix after finding an intersection.
     </TD>
   </TR>
 </TBODY>
@@ -269,7 +271,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementations, interesting features, problems, etc.
+		We added a new argument to raypro called '-hardshadows'. This allows us to enable and disable it. We call IntersectScene on a ray from the point to the light and if does intersect we skip that light's contribution.
     </TD>
   </TR>
 </TBODY>
@@ -322,7 +324,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
+		If we are not at max_depth, we reflect the ray and do ComputeRadiance on this new ray and add it mulitplied by k_s.
     </TD>
   </TR>
 </TBODY>
@@ -356,12 +358,38 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-      Comments about implementation, interesting features, problems, etc.
+	We update the ray to have the start position of the intersection point and then we call ComputeRadiance, adding this mulitlpied by k_t.
+
     </TD>
   </TR>
 </TBODY>
 </TABLE>
 <HR><BR>
+	
+<!------------------------------------------------------------------------> 
+
+<H3><A name='accelerate'>Ray Intersection Acceleration</A></H3>
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/stack.jpg"><IMG width=256 src="output/stack.jpg"></A><BR>       
+       No acceleration (482 seconds). Node bounding box checks (47 seconds). This is over 10x speedup.
+    </TD>
+  </TR>
+  <TR>
+    <TD vAlign=top align=middle colspan="3">
+      <A href="input/stack.scn">stack.scn</A><BR>
+  </TR>
+  <TR>
+    <TD vAlign=top align=middle colspan="3">
+      We check if it intersects with the bbox before descending. If it does then we check to see if it's t is greater than one we have from before; if so we don't recurse.<BR>
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<HR><BR>
+
 	
 <!------------------------------------------------------------------------> 
 <!------------------------------------------------------------------------> 
@@ -373,7 +401,12 @@ I believe that I have implemented the following features, which are worth a tota
 <TBODY>
   <TR>
     <TD vAlign=top align=middle>
-       <A href="art/interestingscene.jpg"><IMG width=512 src="art/interestingscene.jpg"></A><BR>
+       <A href="output/interestingscene.jpg"><IMG width=512 src="output/interestingscene.jpg"></A><BR>
+    </TD>
+  </TR>
+  <TR>
+    <TD vAlign=top align=middle colspan="3">
+      Pool table<BR>
     </TD>
   </TR>
 </TBODY>
@@ -391,9 +424,34 @@ I believe that I have implemented the following features, which are worth a tota
 <TBODY>
   <TR>
     <TD vAlign=top align=middle>
-       <A href="art/Art1.jpg"><IMG width=512 src="art/Art1.jpg"></A><BR>       
-       If your art contest submission is a movie, include a screenshot and link it <A href="art/Art1.avi">here</A><BR>       
-       Description of how the image/movie was made 
+       <A href="art/art.jpg"><IMG width=512 src="art/art.jpg"></A><BR>       
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+<HR><BR>
+	
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+<H2><A name='movie'>Movie</A></H2>
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+
+<TABLE cellSpacing=0 cellPadding=10 border=0 vAlign=top align=middle>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+		<video width="512" height="512" controls="controls">
+		  <source src="art/movie.mp4" type="video/mp4" />
+		  <source src="art/movie.webm" type="video/ogg" />
+		  Your browser does not support the video tag.
+		</video>
+		<br>
+	</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top align=middle colspan="3">
+	ff
     </TD>
   </TR>
 </TBODY>
@@ -410,23 +468,23 @@ I believe that I have implemented the following features, which are worth a tota
 
 <DL>
   <DT>How long did you spend on this assignment?
-  <DD>Your answer goes here
+  <DD>15 hours
   <BR>&nbsp;<BR>
 
   <DT>Was it too hard, too easy, or just right?
-  <DD>Your answer goes here
+  <DD>About right
   <BR>&nbsp;<BR>
 
   <DT>What was the best part of the assignment?
-  <DD>Your answer goes here
+  <DD>Pretty images
   <BR>&nbsp;<BR>
 
   <DT>What was the worst part of the assignment?
-  <DD>Your answer goes here
+  <DD>Things taking forever to render
   <BR>&nbsp;<BR>
 
   <DT>How could it be improved for next year?
-  <DD>Your answer goes here
+  <DD>Giving us more sample scenes
   <BR>&nbsp;<BR>
 
 </DL>
