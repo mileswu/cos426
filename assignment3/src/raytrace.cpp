@@ -468,13 +468,15 @@ R3Rgb ComputeRadiance(R3Scene *scene, R3Ray r, int max_depth, R3Node *excludenod
 			v.Normalize();
 
 
-			R3Ray shadowray(intersectionpoint, l);
-			int blocked;
-			R3Point shadowipoint; R3Vector shadowinormal; double shadow_t; R3Node *shadownode;
-			blocked = IntersectScene(scene, shadowray, &shadowipoint, &shadowinormal, &shadow_t, &shadownode, n);
-			if(blocked == 1 && shadow_t > 0 ) {
-				if(hardshadows_enabled == 1)
-					continue;
+			if(hardshadows_enabled == 1) {
+				R3Ray shadowray(intersectionpoint, l);
+				int blocked;
+				R3Point shadowipoint; R3Vector shadowinormal; double shadow_t; R3Node *shadownode;
+				blocked = IntersectScene(scene, shadowray, &shadowipoint, &shadowinormal, &shadow_t, &shadownode, n);
+				if(blocked == 1 && shadow_t > 0 ) {
+					if(shadow_t < shadowray.T(scene->lights[i]->position));
+						continue;
+				}
 			}
 
 			if(intersectionnormal.Dot(l) > 0) {

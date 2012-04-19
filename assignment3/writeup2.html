@@ -271,7 +271,7 @@ I believe that I have implemented the following features, which are worth a tota
   </TR>
   <TR>
     <TD vAlign=top align=middle colspan="3">
-		We added a new argument to raypro called '-hardshadows'. This allows us to enable and disable it. We call IntersectScene on a ray from the point to the light and if does intersect we skip that light's contribution.
+		We added a new argument to raypro called '-hardshadows'. This allows us to enable and disable it. We call IntersectScene on a ray from the point to the light and if does intersect we skip that light's contribution. To prevent self-intersection (i.e. finding the light is blocked at t=0 by itself), we pass the Node to IntersectScene so it can ignore it.
     </TD>
   </TR>
 </TBODY>
@@ -325,6 +325,7 @@ I believe that I have implemented the following features, which are worth a tota
   <TR>
     <TD vAlign=top align=middle colspan="3">
 		If we are not at max_depth, we reflect the ray and do ComputeRadiance on this new ray and add it mulitplied by k_s.
+		To prevent self-intersection, we pass the Node to IntersectScene so it can ignore it.
     </TD>
   </TR>
 </TBODY>
