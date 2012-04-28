@@ -1,0 +1,49 @@
+camera 0 -30 150  0 0 -1  0 1 0  0.25  0.01 1000
+
+particle_gravity 0 -9.80665 0
+
+particle  -10 0 0   0 0 0    1 1 0 0 0 -1
+particle   -9 0 0   0 0 0    1 0 0 0 0 -1
+particle   -8 0 0   0 0 0    1 0 0 0 0 -1
+particle   -7 0 0   0 0 0    1 0 0 0 0 -1
+particle   -6 0 0   0 0 0    1 0 0 0 0 -1
+particle   -5 0 0   0 0 0    1 0 0 0 0 -1
+particle   -4 0 0   0 0 0    1 0 0 0 0 -1
+particle   -3 0 0   0 0 0    1 0 0 0 0 -1
+particle   -2 0 0   0 0 0    1 0 0 0 0 -1
+particle   -1 0 0   0 0 0    1 0 0 0 0 -1
+particle    0 0 0   0 0 0    1 0 0 0 0 -1
+particle    1 0 0   0 0 0    1 0 0 0 0 -1
+particle    2 0 0   0 0 0    1 0 0 0 0 -1
+particle    3 0 0   0 0 0    1 0 0 0 0 -1
+particle    4 0 0   0 0 0    1 0 0 0 0 -1
+particle    5 0 0   0 0 0    1 0 0 0 0 -1
+particle    6 0 0   0 0 0    1 0 0 0 0 -1
+particle    7 0 0   0 0 0    1 0 0 0 0 -1
+particle    8 0 0   0 0 0    1 0 0 0 0 -1
+particle    9 0 0   0 0 0    1 0 0 0 0 -1
+particle   10 0 0   0 0 0    1 0 0 0 0 -1
+
+particle_spring   0  1   1 100 20 
+particle_spring   1  2   1 100 20 
+particle_spring   2  3   1 100 20 
+particle_spring   3  4   1 100 20 
+particle_spring   4  5   1 100 20 
+particle_spring   5  6   1 100 20 
+particle_spring   6  7   1 100 20 
+particle_spring   7  8   1 100 20 
+particle_spring   8  9   1 100 20 
+particle_spring   9 10   1 100 20 
+particle_spring  10 11   1 100 20 
+particle_spring  11 12   1 100 20 
+particle_spring  12 13   1 100 20 
+particle_spring  13 14   1 100 20 
+particle_spring  14 15   1 100 20 
+particle_spring  15 16   1 100 20 
+particle_spring  16 17   1 100 20 
+particle_spring  17 18   1 100 20 
+particle_spring  18 19   1 100 20 
+particle_spring  19 20   1 100 20 
+
+
+

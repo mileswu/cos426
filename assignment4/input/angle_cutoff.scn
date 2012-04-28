@@ -1,0 +1,21 @@
+camera 0 16 67  0.0287 -0.2 -0.979  -0.004 0.979 -0.200  0.25  0.01 1000
+
+material  0 0 0  1 0 0    1 0 0   0 0 0  0 0 0  10 1 0
+material  0 0 0  0 1 0    0 1 0   0 0 0  0 0 0  10 1 0
+material  0 0 0  0 0 1    0 0 1   0 0 0  0 0 0  10 1 0
+
+particle_source 
+  1 0 0 0 10 0
+  10 1 0
+  circle  -10 0 0  0 1 0  1
+ 
+particle_source 
+  1 0 0 0 10 1
+  10 1 0.5
+  circle  0 0 0  0 1 0  1
+
+particle_source 
+  1 0 0 0 10 2
+  10 1 1
+  circle  10 0 0  0 1 0  1
+

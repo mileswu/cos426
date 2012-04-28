@@ -1,0 +1,43 @@
+material  0 0 0  1 0 0    1 0 0   0 0 0  0 0 0  10 1 0
+material  0 0 0  0 1 0    0 1 0   0 0 0  0 0 0  10 1 0
+material  0 0 0  0 0 1    0 0 1   0 0 0  0 0 0  10 1 0
+material  0 0 0  1 1 0    1 1 0   0 0 0  0 0 0  10 1 0
+material  0 0 0  0 1 1    0 1 1   0 0 0  0 0 0  10 1 0
+material  0 0 0  1 0 1    1 0 1   0 0 0  0 0 0  10 1 0
+material  0 0 0  1 1 1    1 1 1   0 0 0  0 0 0  10 1 0
+
+particle_source 
+  1 0 0 0 0 0
+  10 0 0
+  box  -4 -1 -1  -2 1 1
+
+particle_source 
+  1 0 0 0 0 1
+  10 0 0
+  mesh  ico.off
+
+particle_source 
+  1 0 0 0 0 2
+  10 0 0
+  cylinder  3 0 0  1 2
+
+particle_source 
+  1 0 0 0 0 3
+  10 0 0
+  cone  -3 3 0  1 2
+
+particle_source 
+  1 0 0 0 0 4
+  10 0 0
+  sphere  0 3 0  1
+
+particle_source 
+  1 0 0 0 0 5
+  10 0 0
+  circle  3 3 0  0 0 1  1
+
+particle_source 
+  1 0 0 0 0 6
+  10 0 0
+  line  -4 -3 0  4 -3 0
+

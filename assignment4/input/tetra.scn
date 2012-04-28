@@ -1,0 +1,12 @@
+particle     0.000000     0.000000     1.000000  0 0 0  1 0 0 1 0 -1
+particle     0.943000     0.000000    -0.333000  0 0 0  1 0 0 1 0 -1
+particle    -0.471000     0.816000    -0.333000  0 0 0  1 0 0 1 0 -1
+particle    -0.471000    -0.816000    -0.333000  0 0 0  1 0 0 1 0 -1
+
+particle_spring      0      1       1.632831 100 20
+particle_spring      0      2       1.632356 100 20
+particle_spring      0      3       1.632356 100 20
+particle_spring      1      2       1.632560 100 20
+particle_spring      1      3       1.632560 100 20
+particle_spring      2      3       1.632000 100 20
+

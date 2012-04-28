@@ -1,0 +1,511 @@
+<HTML>
+<HEAD>
+<TITLE>
+COS 426 Assignment 4
+</TITLE>
+<BODY>
+<CENTER>
+<H2>
+COS 426, Spring 2011<BR>
+NAME, LOGIN<BR>           <!-- Fill in your name and login -->
+</H2>                     
+</CENTER>
+<HR><BR>
+
+
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+<H2>List of Implemented Features</H2>
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+
+I believe that I have implemented the following features, which are worth a total of xxx points:
+<ul>
+<li><A href="#firststep"> First step: </A>
+<ul>
+
+<li><b>(1) Euler integration</b>
+</ul>
+</ul>
+
+
+<ul>
+<li><A href="#particlesources"> Particle sources: </A>
+<ul>
+
+<li><b>(1) Sphere particle sources</b>
+<li><b>(1) Circle particle sources</b>
+
+<li>(1) Box particle sources
+<li>(1) Line particle sources 
+<li>(1) Cylinder particle sources
+<li>(1) Cone particle sources 
+<li>(2) Mesh particle sources
+
+
+</ul>
+</ul>
+
+<!------------------------------------------------------------------------>
+
+<ul>
+<li><A href="#particlesinks"> Particle sinks: </A>
+<ul>
+
+<li><b>(1) Sphere particle sinks</b>
+<li><b>(1) Box particle sinks</b> 
+<li>(1) Circle particle sinks
+<li>(1) Line particle sinks
+<li>(1) Cylinder particle sinks
+<li>(1) Cone particle sinks
+<li>(2) Mesh particle sinks
+
+</ul>
+</ul>
+
+<!------------------------------------------------------------------------>
+
+<ul>
+<li><A href="#simulation"> Particle simulation: </A>
+<ul>
+
+<li><b>(1) Particle lifetimes</b>
+<li><b>(2) Adaptive step sizes</b>
+
+
+<li>(1) Midpoint integration
+
+</ul>
+</ul>
+
+<!------------------------------------------------------------------------>
+
+<ul>
+<li><A href="#collisiondetection">Collision detection: </A>
+
+<ul>
+
+<li><b>(2) Particle-scene collisions</b>   
+
+</ul>
+</ul>
+
+<ul>
+<li><A href="#particleinteraction">Particle interaction: </A>
+<ul>
+
+<li>(1) Particle attraction
+<li>(2) Rope
+<li>(3) Cloth
+<li>(3) Flocking
+
+
+</ul>
+</ul>
+
+<ul>
+<li><A href="#sceneanimation">Scene animation: </A>
+<ul>
+
+<li>(1) Animated camera
+<li>(1) Animated obstacles
+<li>(2) Animated particles
+
+</ul>
+</ul>
+
+<ul>
+<li><A href="#particlerendering">Particle rendering: </A>
+<ul>
+
+<li>(1) Trails
+<li>(1) Dynamic materials
+<li>(1) Responsive materials
+<li>(2) Animated materials
+<li>(2) Textured sprites
+
+</ul>
+</ul>
+
+<ul>
+
+<li><A href="#interactivecontrol">Interactive control:</A>
+<ul>
+
+
+<li>(1) Source control
+
+<li>(1) Sink control
+<li>(2) Source and sink dragging
+<li>(4) Rope or cloth manipulation
+
+</ul>
+</ul>
+
+<ul>
+<li> <A href="#artcontest">Art contest: </A>
+<ul> 
+<li> (1) submit a movie </li>
+<li> (2) win the contest </li>
+</ul>
+</ul>
+
+
+
+<HR><BR>
+
+
+
+
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+<H2>Demonstration of Implemented Features</H2>
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+
+<!------------------------------------------------------------------------> 
+<H3><A name="firststep"> First step  </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/particlemotion.gif"><IMG  width=256 src="output/particlemotion.gif"></A><BR>       
+       <A href="input/particlemotion.scn">particlemotion.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/effectofgravity.gif"><IMG width=256  src="output/effectofgravity.gif"></A><BR>       
+       <A href="input/effectofgravity.scn">effectofgravity.scn</A>
+    </TD>  
+    <TD vAlign=top align=middle>
+       <A href="output/effectofdrag.gif"><IMG width=256 src="output/effectofdrag.gif"></A><BR>       
+       <A href="input/effectofdrag.scn">effectofdrag.scn</A>
+    </TD>  
+</TR>
+</TBODY>
+</TABLE>
+
+<p>The animations in this write-up have been created as animated gif files, using a
+variation of the command
+<pre>
+ convert -delay 4 -loop 0 video-frames/frame*.jpg video.gif
+</pre>
+which is available on most Linux platforms and can be installed on the Mac OS X
+platform with the instructions found 
+<A href="http://www.imagemagick.org/script/binary-releases.php#macosx">here</A>.
+If you cannnot create animated .gif files, you may alternatively submit an MPEG
+(or MPEG4) compressed video created with any software of your choice. In that
+case, please link it accordingly.</p>
+
+Comments about the implementation, pecularities, etc.
+
+<hr><br>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="particlesources"> Particle sources </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/spheresource.gif"><IMG width=256 src="output/spheresource.gif"></A><BR>       
+       <A href="input/spheresource.scn">spheresource.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/circlesource.gif"><IMG width=256 src="output/circlesource.gif"></A><BR>       
+       <A href="input/circlesource.scn">circlesource.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/boxsource.gif"><IMG width=256 src="output/boxsource.gif"></A><BR>       
+       <A href="input/boxsource.scn">boxsource.scn</A>
+    </TD>
+  <TR>
+ </TR>
+    <TD vAlign=top align=middle>
+       <A href="output/linesource.gif"><IMG width=256 src="output/linesource.gif"></A><BR>       
+       <A href="input/linesource.scn">linesource.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/conesource.gif"><IMG width=256 src="output/conesource.gif"></A><BR>       
+       <A href="input/conesource.scn">conesource.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/meshsource.gif"><IMG width=256 src="output/meshsource.gif"></A><BR>       
+       <A href="input/meshsource.scn">meshsource.scn</A>
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+
+Comments about the implementation, pecularities, etc.
+<hr><br>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="particlesinks"> Particle sinks </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE cellSpacing=0 cellPadding=10 border=0>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/spheresink.gif"><IMG width=256 src="output/spheresink.gif"></A><BR>       
+       <A href="input/spheresink.scn">spheresink.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/circlesink.gif"><IMG width=256 src="output/circlesink.gif"></A><BR>       
+       <A href="input/circlesink.scn">circlesink.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/boxsink.gif"><IMG width=256 src="output/boxsink.gif"></A><BR>       
+       <A href="input/boxsink.scn">boxsink.scn</A>
+    </TD>
+  <TR>
+ </TR>
+    <TD vAlign=top align=middle>
+       <A href="output/linesink.gif"><IMG width=256 src="output/linesink.gif"></A><BR>       
+       <A href="input/linesink.scn">linesink.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/conesink.gif"><IMG width=256 src="output/conesink.gif"></A><BR>       
+       <A href="input/conesink.scn">conesink.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/meshsink.gif"><IMG width=256 src="output/meshsink.gif"></A><BR>       
+       <A href="input/meshsink.scn">meshsink.scn</A>
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+
+
+Comments about the implementation, pecularities, etc.
+<hr><br>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="simulation"> Particle simulation </A></H3>
+<!------------------------------------------------------------------------> 
+
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/differentlifetimes.gif"><IMG width=256 src="output/differentlifetimes.gif"></A><BR>       
+       <A href="input/differentlifetimes.scn">differentlifetimes.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/eulervsadaptive_euler.gif"><IMG width=256 src="output/eulervsadaptive_euler.gif"></A><BR>       
+       <A href="input/eulervsadaptive.scn">eulervsadaptive.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/eulervsadaptive_adaptive.gif"><IMG width=256 src="output/eulervsadaptive_adaptive.gif"></A><BR>       
+       <A href="input/eulervsadaptive.scn">eulervsadaptive.scn</A>
+    </TD>
+  </TR>
+ <TR>    <TD vAlign=top align=middle>
+       <A href="output/eulervsmidpoint_euler.gif"><IMG width=256 src="output/eulervsmidpoint_euler.gif"></A><BR>       
+       <A href="input/eulervsmidpoint.scn">eulervsmidpoint.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/eulervsmidpoint_midpoint.gif"><IMG width=256 src="output/eulervsmidpoint_midpoint.gif"></A><BR>       
+       <A href="input/eulervsmidpoint.scn">eulervsmidpoint.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+<p>For the <code>eulervsadaptive.scn</code>, construct a scene which has visible
+problems for naive Euler integration, but works as niceley for adaptive step
+sizes; do the analogous for <code>eulervsmidpoint.scn</code></p>
+
+Comments about the implementation, pecularities, etc.
+<HR><BR>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="collisiondetection"> Collision detection </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/collisiondetection.gif"><IMG width=256 src="output/collisiondetection.gif"></A><BR>       
+       <A href="input/collisiondetection.scn">collisiondetection.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+
+<!------------------------------------------------------------------------> 
+<H3><A name="particleinteraction"> Particle interaction </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/mutualparticleattraction.gif"><IMG width=256 src="output/mutualparticleattraction.gif"></A><BR>       
+       <A href="input/mutualparticleattraction.scn">mutualparticleattraction.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/rope.gif"><IMG width=256 src="output/rope.gif"></A><BR>       
+       <A href="input/rope.scn">rope.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/cloth.gif"><IMG width=256 src="output/cloth.gif"></A><BR>       
+       <A href="input/cloth.scn">cloth.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/flocking.gif"><IMG width=256 src="output/flocking.gif"></A><BR>       
+       <A href="input/flocking.scn">flocking.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+Comments about the implementation, pecularities, etc.
+<HR><BR>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="sceneanimation"> Scene animation </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/animcamera.gif"><IMG width=256 src="output/animcamera.gif"></A><BR>       
+       <A href="input/animcamera.scn">animcamera.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/animobstacles.gif"><IMG width=256 src="output/animobstacles.gif"></A><BR>       
+       <A href="input/animobstacles.scn">animobstacles.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/animparticles.gif"><IMG width=256 src="output/animparticles.gif"></A><BR>       
+       <A href="input/animparticles.scn">animparticles.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+
+<!------------------------------------------------------------------------> 
+<H3><A name="particlerendering"> Particle rendering </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/trails.gif"><IMG width=256 src="output/trails.gif"></A><BR>       
+       <A href="input/trails.scn">trails.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/dynamicmaterials.gif"><IMG width=256 src="output/dynamicmaterials.gif"></A><BR>       
+       <A href="input/dynamicmaterials.scn">dynamicmaterials.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/responsivematerials.gif"><IMG width=256 src="output/responsivematerials.gif"></A><BR>       
+       <A href="input/responsivematerials.scn">responsivematerials.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/animatedmaterials.gif"><IMG width=256 src="output/animatedmaterials.gif"></A><BR>       
+       <A href="input/animatedmaterials.scn">animatedmaterials.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/sprites.gif"><IMG width=256 src="output/sprites.gif"></A><BR>       
+       <A href="input/sprites.scn">sprites.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+<!------------------------------------------------------------------------> 
+<H3><A name="interactivecontrol"> Interactive control </A></H3>
+<!------------------------------------------------------------------------> 
+
+<TABLE>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="output/sourcecontrol.gif"><IMG width=256 src="output/sourcecontrol.gif"></A><BR>       
+       <A href="input/sourcecontrol.scn">sourcecontrol.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/sinkcontrol.gif"><IMG width=256 src="output/sinkcontrol.gif"></A><BR>       
+       <A href="input/sinkcontrol.scn">sinkcontrol.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/sourcesinkdragging.gif"><IMG width=256 src="output/sourcesinkdragging.gif"></A><BR>       
+       <A href="input/sourcesinkdragging.scn">sourcesinkdragging.scn</A>
+    </TD>
+    <TD vAlign=top align=middle>
+       <A href="output/ropeorclothmanipulation.gif"><IMG width=256 src="output/ropeorclothmanipulation.gif"></A><BR>       
+       <A href="input/ropeorclothmanipulation.scn">ropeorclothmanipulation.scn</A>
+    </TD>
+</TR>
+</TBODY>
+</TABLE>
+
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+<H2><A name='art'>Art Contest Submission</A></H2>
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+
+<TABLE cellSpacing=0 cellPadding=10 border=0 vAlign=top align=middle>
+<TBODY>
+  <TR>
+    <TD vAlign=top align=middle>
+       <A href="art/Art1.jpg"><IMG width=512 src="art/Art1.jpg"></A><BR>       
+       Include a screenshot of your movie and link it <A href="art/Art1.avi">here</A><BR>       
+       Description of how the image/movie was made.
+    </TD>
+  </TR>
+</TBODY>
+</TABLE>
+
+Comments about the implementation, pecularities, etc.
+<HR><BR>
+
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+<H2>Feedback</H2>
+<!------------------------------------------------------------------------> 
+<!------------------------------------------------------------------------> 
+
+<DL>
+  <DT>How long did you spend on this assignment?
+  <DD>Your answer goes here
+  <BR>&nbsp;<BR>
+
+  <DT>Was it too hard, too easy, or just right?
+  <DD>Your answer goes here
+  <BR>&nbsp;<BR>
+
+  <DT>What was the best part of the assignment?
+  <DD>Your answer goes here
+  <BR>&nbsp;<BR>
+
+  <DT>What was the worst part of the assignment?
+  <DD>Your answer goes here
+  <BR>&nbsp;<BR>
+
+  <DT>How could it be improved for next year?
+  <DD>Your answer goes here
+  <BR>&nbsp;<BR>
+
+</DL>
+
+<HR><BR>
+
+
+
+<!------------------------------------------------------------------------> 
+
+</BODY>
+</HTML>

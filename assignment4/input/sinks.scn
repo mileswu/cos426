@@ -1,0 +1,35 @@
+camera 20.7116 10.2365 25.5554  -0.660059 -0.315519 -0.68174  -0.261059 0.947299 -0.185667  0.25  0.01 1000
+
+particle_source 
+  1 0 0 0 0 -1
+  10 0 0
+  sphere  0 0 10  1
+
+particle_sink 
+  1 1E-6 0 1
+  box  -4 -1 -1  -2 1 1
+
+particle_sink 
+  1 1E-6 0 1
+  mesh  ico.off
+
+particle_sink 
+  1 1E-6 0 1
+  cylinder  3 0 0  1 2
+
+particle_sink 
+  1 1E-6 0 1
+  cone  -3 3 0  1 2
+
+particle_sink 
+  1 1E-6 0 1
+  sphere  0 3 0  1
+
+particle_sink 
+  1 1E-6 0 1
+  circle  3 3 0  0 0 1  1
+
+particle_sink 
+  1 1E-6 0 1
+  line  -4 -3 0  4 -3 0
+

@@ -1,0 +1,81 @@
+# demonstrates differences due to drag
+
+
+############################################################
+# scene setup
+############################################################
+
+# lighting
+
+ambient 0.5 0.5 1.0
+
+camera -0 2 4   
+       0.0 -0.4 -1
+       0 1 -0.25
+       0.25  0.01 100
+
+
+# materials
+
+# ground plane
+
+material
+    0.5 0.5 0.5
+    0.5 0.5 0.5 
+    0 0 0
+    0 0 0
+    0 0 0
+    1 1 0
+
+# cannon ball
+
+material
+	0 0 0
+	1 0 0
+	0 0 0
+	0 0 0
+	0 0 0
+	1 1 0
+
+# ground plane
+
+box 0
+    -1 -0.05 -1
+    1  0  1
+
+############################################################
+# particle simulation specifics
+############################################################
+
+# moon
+
+particle_gravity 0 -1.5 0
+
+# shoot straight upwards, but with different drag coefficients
+# low masses reduce particle-particle interactions
+
+particle 
+  -0.5 1 0
+  0 1 0
+  .01 0 0.00 0 20.0 1
+
+particle 
+  -0.25 1 0
+  0 1 0
+  .01 0 0.02 0 20.0 1
+
+particle 
+  0.0 1 0
+  0 1 0
+  .01 0 0.04 0 20.0 1
+
+particle 
+  0.25 1 0
+  0 1 0
+  .01 0 0.06 0 20.0 1
+
+particle 
+  0.50 1 0
+  0 1 0
+  .01 0 0.08 0 20.0 1
+
