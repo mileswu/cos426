@@ -6,7 +6,7 @@
 # List of source files
 #
 
-SRCS=particleview.cpp particle.cpp R3Scene.cpp
+SRCS=particleview.cpp particle.cpp R3Scene.cpp raytrace.cpp
 OBJS=$(SRCS:.cpp=.o)
 
 #
@@ -14,7 +14,7 @@ OBJS=$(SRCS:.cpp=.o)
 #
 
 CXX=g++
-CXXFLAGS=-Wall -I. -g -DUSE_JPEG
+CXXFLAGS=-Wall -I. -g -DUSE_JPEG -O2
 
 #
 # Libraries

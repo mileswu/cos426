@@ -14,8 +14,8 @@ enum {
 
 // Particle system functions
 
-void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int integration_type);
+void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int integration_type, int mutualattraction);
 void GenerateParticles(R3Scene *scene, double current_time, double delta_time);
-void RenderParticles(R3Scene *scene, double current_time, double delta_time);
+void RenderParticles(R3Scene *scene, double current_time, double delta_time, int dynamic);
 
 

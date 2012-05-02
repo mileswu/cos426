@@ -16,7 +16,8 @@
 // GLOBAL CONSTANTS
 ////////////////////////////////////////////////////////////
 
-static const double VIDEO_FRAME_DELAY = 1./25.; // 25 FPS 
+static double VIDEO_FRAME_DELAY = 1./25.; // 25 FPS 
+static int VIDEO_SKIP = 1; // 25 FPS 
 
 ////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -28,6 +29,8 @@ static char *input_scene_name = NULL;
 static char *output_image_name = NULL;
 static const char *video_prefix = "./video-frames/";
 static int integration_type = EULER_INTEGRATION;
+static int mutualattraction = 1;
+static int dynamic = 1;
 
 
 
@@ -564,13 +567,13 @@ void DrawParticles(R3Scene *scene)
   }
 
   // Update particles
-  UpdateParticles(scene, current_time - time_lost_taking_videos, delta_time, integration_type);
+  UpdateParticles(scene, current_time - time_lost_taking_videos, delta_time, integration_type, mutualattraction);
 
   // Generate new particles
   GenerateParticles(scene, current_time - time_lost_taking_videos, delta_time);
 
   // Render particles
-  if (show_particles) RenderParticles(scene, current_time - time_lost_taking_videos, delta_time);
+  if (show_particles) RenderParticles(scene, current_time - time_lost_taking_videos, delta_time, dynamic);
 
   // Remember previous time
   previous_time = current_time;
@@ -848,12 +851,13 @@ void GLUTRedraw(void)
     static int next_frame = 0;
     static int num_frames_recorded = 0;
     for (;;) {
-      sprintf(frame_name, "%sframe%04d.jpg", video_prefix, next_frame++);
+      sprintf(frame_name, "%sframe%06d.jpg", video_prefix, next_frame++);
       FILE *fp = fopen(frame_name, "r");
       if (!fp) break; 
       else fclose(fp);
     }
-    GLUTSaveImage(frame_name);
+    if(next_frame % VIDEO_SKIP == 0)
+      GLUTSaveImage(frame_name);
     if (next_frame % 100 == 1) {
       printf("Saved %s\n", frame_name);
     }
@@ -1205,6 +1209,18 @@ ParseArgs(int argc, char **argv)
         GLUTwindow_width = 256;
         GLUTwindow_height = 256;
         save_video = 1;
+      }
+      else if (!strcmp(*argv, "-videofps")) { 
+        argc--; argv++; VIDEO_FRAME_DELAY = 1.0/(double)atoi(*argv); 
+      }
+      else if (!strcmp(*argv, "-videoskip")) { 
+        argc--; argv++; VIDEO_SKIP = atoi(*argv); 
+      }
+      else if (!strcmp(*argv, "-nomutualattraction")) {
+        mutualattraction = 0;
+      }
+      else if (!strcmp(*argv, "-nodynamic")) {
+        dynamic = 0;
       }
       else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
       argv++; argc--;
