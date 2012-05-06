@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cd src
+make
+cd ..
+
 # First Step
 ./src/particleview ./input/particlerace.scn -recordandquit 50
 convert -delay 3 -loop 0 video-frames/frame*.jpg output/particlerace.gif

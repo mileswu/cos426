@@ -89,6 +89,8 @@ void GenerateParticles(R3Scene *scene, double current_time, double delta_time)
         normal.Normalize();
         R3Vector tangentplanevector = normal;
         tangentplanevector[2] += 1;
+        tangentplanevector[0] += 1;
+        tangentplanevector[1] += 1;
         tangentplanevector.Cross(normal);
         tangentplanevector.Normalize();
       
@@ -103,6 +105,42 @@ void GenerateParticles(R3Scene *scene, double current_time, double delta_time)
         direction.Rotate(vcrossn, acos(t2));
         direction.Normalize();
         particle->velocity = source->velocity*direction;
+      }
+      else if(shape->type == R3_CIRCLE_SHAPE) {
+        R3Circle *circle = shape->circle;
+        R3Point center = circle->Center();
+        double rmax = circle->Radius();
+        
+        R3Vector normal = circle->Normal();
+        normal.Normalize();
+        R3Vector tangentplanevector1 = normal;
+        tangentplanevector1[2] += 1;
+        tangentplanevector1[0] += 1;
+        tangentplanevector1[1] += 1;
+        tangentplanevector1.Cross(normal);
+        tangentplanevector1.Normalize();
+        R3Vector tangentplanevector2 = tangentplanevector1;
+        tangentplanevector2.Cross(normal);
+        
+        double theta = RandomNumber()*2.0*M_PI;
+        double r = RandomNumber()*rmax;
+        
+        particle->position = center + sqrt(r)*cos(theta)*tangentplanevector1 + sqrt(r)*sin(theta)*tangentplanevector2;
+      
+        double t1, t2;
+        t1 = RandomNumber()*2.0*M_PI;
+        t2 = RandomNumber()*sin(source->angle_cutoff);
+      
+        R3Vector direction = tangentplanevector1;
+        direction.Rotate(normal, t1);
+        R3Vector vcrossn = direction;
+        vcrossn.Cross(normal);
+        direction.Rotate(vcrossn, acos(t2));
+        direction.Normalize();
+        if(rand() % 2 == 0)
+          particle->velocity = source->velocity*direction;
+        else
+          particle->velocity = -source->velocity*direction;
       }
       else {
         delete particle;
